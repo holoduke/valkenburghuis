@@ -3,6 +3,7 @@ export interface Todo {
   title: string
   category: string
   assignee: string
+  notes: string
   completed: boolean
   createdAt: string
   order: number

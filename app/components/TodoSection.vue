@@ -24,6 +24,7 @@ const emit = defineEmits<{
   toggle: [id: string]
   delete: [id: string]
   add: [data: { title: string; category: string; assignee?: string }]
+  update: [id: string, data: { title: string; category: string; assignee: string; notes: string }]
   updateAssignee: [id: string, assignee: string]
   reorder: [ids: string[]]
 }>()
@@ -33,6 +34,9 @@ const newTitle = ref('')
 const newCategory = ref('overig')
 const newAssignee = ref('')
 const activeFilter = ref('alle')
+const dragFromId = ref<string | null>(null)
+const dragOverId = ref<string | null>(null)
+const editingTodo = ref<Todo | null>(null)
 
 const filteredTodos = computed(() => {
   const sorted = [...props.todos].sort((a, b) => {
@@ -64,38 +68,48 @@ function handleAdd() {
   showForm.value = false
 }
 
-function moveUp(id: string) {
-  const list = filteredTodos.value.filter((t) => !t.completed)
-  const idx = list.findIndex((t) => t.id === id)
-  if (idx <= 0) return
-  const ids = list.map((t) => t.id)
-  ;[ids[idx - 1], ids[idx]] = [ids[idx], ids[idx - 1]]
-  // Append completed todos at the end
-  const completedIds = filteredTodos.value.filter((t) => t.completed).map((t) => t.id)
-  // If filtered, we need to preserve todos outside the filter
-  const allIds = activeFilter.value === 'alle'
-    ? [...ids, ...completedIds]
-    : props.todos.map((t) => {
-        const swapIdx = ids.indexOf(t.id)
-        return swapIdx >= 0 ? ids[swapIdx] : t.id
-      })
-  emit('reorder', activeFilter.value === 'alle' ? [...ids, ...completedIds] : allIds)
+function onDragStart(id: string) {
+  dragFromId.value = id
 }
 
-function moveDown(id: string) {
-  const list = filteredTodos.value.filter((t) => !t.completed)
-  const idx = list.findIndex((t) => t.id === id)
-  if (idx < 0 || idx >= list.length - 1) return
-  const ids = list.map((t) => t.id)
-  ;[ids[idx], ids[idx + 1]] = [ids[idx + 1], ids[idx]]
+function onDragOver(id: string) {
+  dragOverId.value = id
+}
+
+function onDrop() {
+  if (!dragFromId.value || !dragOverId.value || dragFromId.value === dragOverId.value) {
+    dragFromId.value = null
+    dragOverId.value = null
+    return
+  }
+
+  const uncompleted = filteredTodos.value.filter((t) => !t.completed)
+  const ids = uncompleted.map((t) => t.id)
+  const fromIdx = ids.indexOf(dragFromId.value)
+  const toIdx = ids.indexOf(dragOverId.value)
+
+  if (fromIdx === -1 || toIdx === -1) return
+
+  ids.splice(fromIdx, 1)
+  ids.splice(toIdx, 0, dragFromId.value)
+
   const completedIds = filteredTodos.value.filter((t) => t.completed).map((t) => t.id)
-  const allIds = activeFilter.value === 'alle'
-    ? [...ids, ...completedIds]
-    : props.todos.map((t) => {
-        const swapIdx = ids.indexOf(t.id)
-        return swapIdx >= 0 ? ids[swapIdx] : t.id
-      })
-  emit('reorder', activeFilter.value === 'alle' ? [...ids, ...completedIds] : allIds)
+
+  if (activeFilter.value === 'alle') {
+    emit('reorder', [...ids, ...completedIds])
+  } else {
+    // When filtered, preserve order of items not in view
+    const allSorted = [...props.todos].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    const reordered = allSorted.map((t) => t.id)
+    // Remove dragged items from their positions
+    const filteredIds = [...ids, ...completedIds]
+    const otherIds = reordered.filter((id) => !filteredIds.includes(id))
+    // Interleave: put filtered items back in their relative positions
+    emit('reorder', [...ids, ...completedIds, ...otherIds])
+  }
+
+  dragFromId.value = null
+  dragOverId.value = null
 }
 </script>
 
@@ -186,7 +200,7 @@ function moveDown(id: string) {
       class="bg-white rounded-xl border border-warm-200 divide-y divide-warm-100"
     >
       <TodoItem
-        v-for="(todo, index) in filteredTodos"
+        v-for="todo in filteredTodos"
         :key="todo.id"
         :id="todo.id"
         :title="todo.title"
@@ -194,18 +208,28 @@ function moveDown(id: string) {
         :assignee="todo.assignee || ''"
         :category-color="getCategoryColor(todo.category)"
         :category-label="getCategoryLabel(todo.category)"
-        :is-first="index === 0 || todo.completed"
-        :is-last="index === filteredTodos.filter(t => !t.completed).length - 1 || todo.completed"
         @toggle="emit('toggle', $event)"
         @delete="emit('delete', $event)"
-        @move-up="moveUp"
-        @move-down="moveDown"
+        @edit="(id: string) => editingTodo = filteredTodos.find(t => t.id === id) || null"
         @update-assignee="emit('updateAssignee', $event[0] ?? $event, $event[1] ?? '')"
+        @dragstart="onDragStart"
+        @dragover="onDragOver"
+        @drop="onDrop"
       />
     </div>
 
     <div v-else class="text-center py-8 text-warm-400 text-sm">
       {{ activeFilter === 'alle' ? 'Nog geen taken. Voeg er een toe!' : 'Geen taken in deze categorie.' }}
     </div>
+
+    <!-- Edit modal -->
+    <TodoEditModal
+      v-if="editingTodo"
+      :todo="editingTodo"
+      :categories="props.categories"
+      @close="editingTodo = null"
+      @save="(data) => { emit('update', editingTodo!.id, data); editingTodo = null }"
+      @delete="(id) => { emit('delete', id); editingTodo = null }"
+    />
   </section>
 </template>

@@ -24,6 +24,10 @@ onMounted(async () => {
 function handleUpdateAssignee(id: string, assignee: string) {
   updateTodo(id, { assignee })
 }
+
+function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string }) {
+  updateTodo(id, data)
+}
 </script>
 
 <template>
@@ -52,6 +56,7 @@ function handleUpdateAssignee(id: string, assignee: string) {
         @delete="deleteTodo"
         @add="addTodo"
         @update-assignee="handleUpdateAssignee"
+        @update="handleUpdateTodo"
         @reorder="reorderTodos"
       />
     </main>

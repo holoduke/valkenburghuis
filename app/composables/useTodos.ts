@@ -3,6 +3,7 @@ interface Todo {
   title: string
   category: string
   assignee: string
+  notes: string
   completed: boolean
   createdAt: string
   order: number
@@ -39,7 +40,7 @@ export function useTodos() {
     await fetchTodos()
   }
 
-  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category'>>) {
+  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category' | 'notes'>>) {
     await $fetch(`/api/todos/${id}`, { method: 'PATCH', body: data })
     await fetchTodos()
   }

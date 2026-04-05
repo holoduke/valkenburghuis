@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid'
 import type { Todo } from '../utils/types'
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<{ title: string; category: string; assignee?: string }>(event)
+  const body = await readBody<{ title: string; category: string; assignee?: string; notes?: string }>(event)
 
   if (!body.title?.trim()) {
     throw createError({ statusCode: 400, statusMessage: 'Title is required' })
@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     title: body.title.trim(),
     category: body.category || 'overig',
     assignee: body.assignee || '',
+    notes: body.notes || '',
     completed: false,
     createdAt: new Date().toISOString(),
     order: maxOrder + 1,

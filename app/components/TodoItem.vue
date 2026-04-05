@@ -6,16 +6,16 @@ const props = defineProps<{
   assignee: string
   categoryColor: string
   categoryLabel: string
-  isFirst: boolean
-  isLast: boolean
 }>()
 
 const emit = defineEmits<{
   toggle: [id: string]
   delete: [id: string]
-  moveUp: [id: string]
-  moveDown: [id: string]
+  edit: [id: string]
   updateAssignee: [id: string, assignee: string]
+  dragstart: [id: string]
+  dragover: [id: string]
+  drop: []
 }>()
 
 const ASSIGNEES = ['', 'gillis', 'ilse'] as const
@@ -33,33 +33,43 @@ function assigneeInitial(name: string): string {
 function assigneeColor(name: string): string {
   return name === 'gillis' ? '#3B82F6' : '#F472B6'
 }
+
+function onDragStart(e: DragEvent) {
+  if (e.dataTransfer) {
+    e.dataTransfer.effectAllowed = 'move'
+    e.dataTransfer.setData('text/plain', props.id)
+  }
+  emit('dragstart', props.id)
+}
+
+function onDragOver(e: DragEvent) {
+  e.preventDefault()
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+  emit('dragover', props.id)
+}
+
+function onDrop(e: DragEvent) {
+  e.preventDefault()
+  emit('drop')
+}
 </script>
 
 <template>
   <div
-    class="group flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:bg-warm-50/80"
+    class="group flex items-center gap-3 px-4 py-3 rounded-lg transition-all hover:bg-warm-50/80 cursor-grab active:cursor-grabbing"
     :class="completed ? 'opacity-60' : ''"
+    :draggable="!completed"
+    @dragstart="onDragStart"
+    @dragover="onDragOver"
+    @drop="onDrop"
   >
-    <!-- Move buttons -->
-    <div class="flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-      <button
-        class="text-warm-300 hover:text-warm-600 disabled:opacity-0 transition-colors"
-        :disabled="isFirst"
-        @click="emit('moveUp', id)"
-      >
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
-      <button
-        class="text-warm-300 hover:text-warm-600 disabled:opacity-0 transition-colors"
-        :disabled="isLast"
-        @click="emit('moveDown', id)"
-      >
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+    <!-- Drag handle -->
+    <div class="flex-shrink-0 text-warm-300 opacity-0 group-hover:opacity-100 transition-opacity">
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
+        <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
+        <circle cx="9" cy="19" r="1.5" /><circle cx="15" cy="19" r="1.5" />
+      </svg>
     </div>
 
     <!-- Checkbox -->
@@ -83,12 +93,13 @@ function assigneeColor(name: string): string {
     </button>
 
     <!-- Title -->
-    <span
-      class="flex-1 text-sm transition-all"
+    <button
+      class="flex-1 text-sm text-left transition-all select-none hover:text-accent-600"
       :class="completed ? 'line-through text-warm-400' : 'text-warm-800'"
+      @click="emit('edit', id)"
     >
       {{ title }}
-    </span>
+    </button>
 
     <!-- Assignee badge -->
     <button
