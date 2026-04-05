@@ -5,6 +5,7 @@
     { "id": "vloer", "label": "Vloer", "amount": 0 },
     { "id": "schilderen", "label": "Schilderwerk", "amount": 0 },
     { "id": "inbouwkasten", "label": "Inbouwkasten", "amount": 0 },
-    { "id": "tuin", "label": "Tuin", "amount": 0 }
+    { "id": "tuin", "label": "Tuin", "amount": 0 },
+    { "id": "meerwerk_kees", "label": "Meerwerk Kees", "amount": 0 }
   ]
 }
