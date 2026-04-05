@@ -1,0 +1,51 @@
+[
+  {
+    "id": "tl_fundament",
+    "date": "2026-01-15",
+    "title": "Fundering",
+    "description": "Fundering gestort",
+    "completed": true
+  },
+  {
+    "id": "tl_ruwbouw",
+    "date": "2026-03-01",
+    "title": "Ruwbouw",
+    "description": "Muren en constructie",
+    "completed": true
+  },
+  {
+    "id": "tl_dak",
+    "date": "2026-04-15",
+    "title": "Dak",
+    "description": "Dakconstructie en pannen",
+    "completed": false
+  },
+  {
+    "id": "tl_install",
+    "date": "2026-05-15",
+    "title": "Installaties",
+    "description": "Elektra, water, verwarming",
+    "completed": false
+  },
+  {
+    "id": "tl_afwerk",
+    "date": "2026-07-01",
+    "title": "Afwerking",
+    "description": "Stucwerk, schilderwerk, vloeren",
+    "completed": false
+  },
+  {
+    "id": "tl_tuin",
+    "date": "2026-08-01",
+    "title": "Tuin & Terrein",
+    "description": "Tuinaanleg en bestrating",
+    "completed": false
+  },
+  {
+    "id": "tl_oplever",
+    "date": "2026-09-01",
+    "title": "Oplevering",
+    "description": "Eindkeuring en sleuteloverdracht",
+    "completed": false
+  }
+]
