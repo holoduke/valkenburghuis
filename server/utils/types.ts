@@ -2,8 +2,10 @@ export interface Todo {
   id: string
   title: string
   category: string
+  assignee: string
   completed: boolean
   createdAt: string
+  order: number
 }
 
 export interface TimelineEvent {

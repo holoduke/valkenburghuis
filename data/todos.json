@@ -1,121 +1,19 @@
 [
-  {
-    "id": "td_01",
-    "title": "Van Kees (aannemer) de planning voor oplevering krijgen",
-    "category": "aannemer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:00:00.000Z"
-  },
-  {
-    "id": "td_02",
-    "title": "Van Kees prijsopgave ontvangen",
-    "category": "aannemer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:01:00.000Z"
-  },
-  {
-    "id": "td_03",
-    "title": "Offerte van Kees moet worden aangepast op basis van extra werk",
-    "category": "aannemer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:02:00.000Z"
-  },
-  {
-    "id": "td_04",
-    "title": "Checken wat oplever kwaliteit is van de muren",
-    "category": "aannemer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:03:00.000Z"
-  },
-  {
-    "id": "td_05",
-    "title": "Offerte van gietvloer Hollandse Bodem bekijken",
-    "category": "vloer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:04:00.000Z"
-  },
-  {
-    "id": "td_06",
-    "title": "Plinten regelen, eventueel ook bij Hollandse Bodem",
-    "category": "vloer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:05:00.000Z"
-  },
-  {
-    "id": "td_07",
-    "title": "Tijdlijn bepalen voor vloer leggen",
-    "category": "vloer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:06:00.000Z"
-  },
-  {
-    "id": "td_08",
-    "title": "Offertes van schilderen bekijken en 1 selecteren",
-    "category": "schilderwerk",
-    "completed": false,
-    "createdAt": "2026-04-05T10:07:00.000Z"
-  },
-  {
-    "id": "td_09",
-    "title": "Schilder bellen om meer informatie te delen",
-    "category": "schilderwerk",
-    "completed": false,
-    "createdAt": "2026-04-05T10:08:00.000Z"
-  },
-  {
-    "id": "td_10",
-    "title": "Tijdlijn bepalen voor schilderen",
-    "category": "schilderwerk",
-    "completed": false,
-    "createdAt": "2026-04-05T10:09:00.000Z"
-  },
-  {
-    "id": "td_11",
-    "title": "Tegelplan maken voor badkamer eerste verdieping en op zolder",
-    "category": "badkamer",
-    "completed": false,
-    "createdAt": "2026-04-05T10:10:00.000Z"
-  },
-  {
-    "id": "td_12",
-    "title": "Tijdlijn bepalen voor keuken inbouw",
-    "category": "keuken",
-    "completed": false,
-    "createdAt": "2026-04-05T10:11:00.000Z"
-  },
-  {
-    "id": "td_13",
-    "title": "Factuur Merijn bepalen",
-    "category": "interieur",
-    "completed": false,
-    "createdAt": "2026-04-05T10:12:00.000Z"
-  },
-  {
-    "id": "td_14",
-    "title": "Kleurpalet met Merijn (interieur design) voor hele huis",
-    "category": "interieur",
-    "completed": false,
-    "createdAt": "2026-04-05T10:13:00.000Z"
-  },
-  {
-    "id": "td_15",
-    "title": "Prijs ontvangen van maatwerk kasten",
-    "category": "interieur",
-    "completed": false,
-    "createdAt": "2026-04-05T10:14:00.000Z"
-  },
-  {
-    "id": "td_16",
-    "title": "Tuin: ontwerp en planning maken",
-    "category": "tuin",
-    "completed": false,
-    "createdAt": "2026-04-05T10:15:00.000Z"
-  },
-  {
-    "id": "td_17",
-    "title": "Verhuisbedrijf benaderen en offertes aanvragen",
-    "category": "overig",
-    "completed": false,
-    "createdAt": "2026-04-05T10:16:00.000Z"
-  }
+  { "id": "td_01", "title": "Van Kees (aannemer) de planning voor oplevering krijgen", "category": "aannemer", "assignee": "gillis", "completed": false, "createdAt": "2026-04-05T10:00:00.000Z", "order": 0 },
+  { "id": "td_02", "title": "Van Kees prijsopgave ontvangen", "category": "aannemer", "assignee": "gillis", "completed": false, "createdAt": "2026-04-05T10:01:00.000Z", "order": 1 },
+  { "id": "td_03", "title": "Offerte van Kees moet worden aangepast op basis van extra werk", "category": "aannemer", "assignee": "gillis", "completed": false, "createdAt": "2026-04-05T10:02:00.000Z", "order": 2 },
+  { "id": "td_04", "title": "Checken wat oplever kwaliteit is van de muren", "category": "aannemer", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:03:00.000Z", "order": 3 },
+  { "id": "td_05", "title": "Offerte van gietvloer Hollandse Bodem bekijken", "category": "vloer", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:04:00.000Z", "order": 4 },
+  { "id": "td_06", "title": "Plinten regelen, eventueel ook bij Hollandse Bodem", "category": "vloer", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:05:00.000Z", "order": 5 },
+  { "id": "td_07", "title": "Tijdlijn bepalen voor vloer leggen", "category": "vloer", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:06:00.000Z", "order": 6 },
+  { "id": "td_08", "title": "Offertes van schilderen bekijken en 1 selecteren", "category": "schilderwerk", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:07:00.000Z", "order": 7 },
+  { "id": "td_09", "title": "Schilder bellen om meer informatie te delen", "category": "schilderwerk", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:08:00.000Z", "order": 8 },
+  { "id": "td_10", "title": "Tijdlijn bepalen voor schilderen", "category": "schilderwerk", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:09:00.000Z", "order": 9 },
+  { "id": "td_11", "title": "Tegelplan maken voor badkamer eerste verdieping en op zolder", "category": "badkamer", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:10:00.000Z", "order": 10 },
+  { "id": "td_12", "title": "Tijdlijn bepalen voor keuken inbouw", "category": "keuken", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:11:00.000Z", "order": 11 },
+  { "id": "td_13", "title": "Factuur Merijn bepalen", "category": "interieur", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:12:00.000Z", "order": 12 },
+  { "id": "td_14", "title": "Kleurpalet met Merijn (interieur design) voor hele huis", "category": "interieur", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:13:00.000Z", "order": 13 },
+  { "id": "td_15", "title": "Prijs ontvangen van maatwerk kasten", "category": "interieur", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:14:00.000Z", "order": 14 },
+  { "id": "td_16", "title": "Tuin: ontwerp en planning maken", "category": "tuin", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:15:00.000Z", "order": 15 },
+  { "id": "td_17", "title": "Verhuisbedrijf benaderen en offertes aanvragen", "category": "overig", "assignee": "", "completed": false, "createdAt": "2026-04-05T10:16:00.000Z", "order": 16 }
 ]

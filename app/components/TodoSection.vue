@@ -3,8 +3,10 @@ interface Todo {
   id: string
   title: string
   category: string
+  assignee: string
   completed: boolean
   createdAt: string
+  order: number
 }
 
 interface Category {
@@ -21,18 +23,21 @@ const props = defineProps<{
 const emit = defineEmits<{
   toggle: [id: string]
   delete: [id: string]
-  add: [data: { title: string; category: string }]
+  add: [data: { title: string; category: string; assignee?: string }]
+  updateAssignee: [id: string, assignee: string]
+  reorder: [ids: string[]]
 }>()
 
 const showForm = ref(false)
 const newTitle = ref('')
 const newCategory = ref('overig')
+const newAssignee = ref('')
 const activeFilter = ref('alle')
 
 const filteredTodos = computed(() => {
   const sorted = [...props.todos].sort((a, b) => {
     if (a.completed !== b.completed) return a.completed ? 1 : -1
-    return b.createdAt.localeCompare(a.createdAt)
+    return (a.order ?? 0) - (b.order ?? 0)
   })
   if (activeFilter.value === 'alle') return sorted
   return sorted.filter((t) => t.category === activeFilter.value)
@@ -48,10 +53,49 @@ function getCategoryLabel(categoryId: string): string {
 
 function handleAdd() {
   if (!newTitle.value.trim()) return
-  emit('add', { title: newTitle.value.trim(), category: newCategory.value })
+  emit('add', {
+    title: newTitle.value.trim(),
+    category: newCategory.value,
+    assignee: newAssignee.value,
+  })
   newTitle.value = ''
   newCategory.value = 'overig'
+  newAssignee.value = ''
   showForm.value = false
+}
+
+function moveUp(id: string) {
+  const list = filteredTodos.value.filter((t) => !t.completed)
+  const idx = list.findIndex((t) => t.id === id)
+  if (idx <= 0) return
+  const ids = list.map((t) => t.id)
+  ;[ids[idx - 1], ids[idx]] = [ids[idx], ids[idx - 1]]
+  // Append completed todos at the end
+  const completedIds = filteredTodos.value.filter((t) => t.completed).map((t) => t.id)
+  // If filtered, we need to preserve todos outside the filter
+  const allIds = activeFilter.value === 'alle'
+    ? [...ids, ...completedIds]
+    : props.todos.map((t) => {
+        const swapIdx = ids.indexOf(t.id)
+        return swapIdx >= 0 ? ids[swapIdx] : t.id
+      })
+  emit('reorder', activeFilter.value === 'alle' ? [...ids, ...completedIds] : allIds)
+}
+
+function moveDown(id: string) {
+  const list = filteredTodos.value.filter((t) => !t.completed)
+  const idx = list.findIndex((t) => t.id === id)
+  if (idx < 0 || idx >= list.length - 1) return
+  const ids = list.map((t) => t.id)
+  ;[ids[idx], ids[idx + 1]] = [ids[idx + 1], ids[idx]]
+  const completedIds = filteredTodos.value.filter((t) => t.completed).map((t) => t.id)
+  const allIds = activeFilter.value === 'alle'
+    ? [...ids, ...completedIds]
+    : props.todos.map((t) => {
+        const swapIdx = ids.indexOf(t.id)
+        return swapIdx >= 0 ? ids[swapIdx] : t.id
+      })
+  emit('reorder', activeFilter.value === 'alle' ? [...ids, ...completedIds] : allIds)
 }
 </script>
 
@@ -94,6 +138,14 @@ function handleAdd() {
             {{ cat.label }}
           </option>
         </select>
+        <select
+          v-model="newAssignee"
+          class="px-3 py-2 rounded-lg border border-warm-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
+        >
+          <option value="">Niemand</option>
+          <option value="gillis">Gillis</option>
+          <option value="ilse">Ilse</option>
+        </select>
         <button
           type="submit"
           class="px-4 py-2 bg-accent-500 text-white rounded-lg text-sm font-medium hover:bg-accent-600 transition-colors"
@@ -134,15 +186,21 @@ function handleAdd() {
       class="bg-white rounded-xl border border-warm-200 divide-y divide-warm-100"
     >
       <TodoItem
-        v-for="todo in filteredTodos"
+        v-for="(todo, index) in filteredTodos"
         :key="todo.id"
         :id="todo.id"
         :title="todo.title"
         :completed="todo.completed"
+        :assignee="todo.assignee || ''"
         :category-color="getCategoryColor(todo.category)"
         :category-label="getCategoryLabel(todo.category)"
+        :is-first="index === 0 || todo.completed"
+        :is-last="index === filteredTodos.filter(t => !t.completed).length - 1 || todo.completed"
         @toggle="emit('toggle', $event)"
         @delete="emit('delete', $event)"
+        @move-up="moveUp"
+        @move-down="moveDown"
+        @update-assignee="emit('updateAssignee', $event[0] ?? $event, $event[1] ?? '')"
       />
     </div>
 

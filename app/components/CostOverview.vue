@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { nanoid } from 'nanoid'
+
 interface CostItem {
   id: string
   label: string
@@ -20,7 +22,10 @@ const emit = defineEmits<{
   'update:costs': [costs: CostsData]
 }>()
 
-const COLORS = ['#EC4899', '#8B5CF6', '#EF4444', '#A855F7', '#22C55E']
+const COLORS = ['#EC4899', '#8B5CF6', '#EF4444', '#A855F7', '#22C55E', '#F97316', '#06B6D4', '#6366F1']
+
+const showForm = ref(false)
+const newLabel = ref('')
 
 function updateBouwdepot(value: string) {
   const num = parseFloat(value) || 0
@@ -35,6 +40,23 @@ function updateItem(index: number, value: string) {
   emit('update:costs', { ...props.costs, items: newItems })
 }
 
+function addItem() {
+  if (!newLabel.value.trim()) return
+  const newItem: CostItem = {
+    id: nanoid(10),
+    label: newLabel.value.trim(),
+    amount: 0,
+  }
+  emit('update:costs', { ...props.costs, items: [...props.costs.items, newItem] })
+  newLabel.value = ''
+  showForm.value = false
+}
+
+function removeItem(index: number) {
+  const newItems = props.costs.items.filter((_, i) => i !== index)
+  emit('update:costs', { ...props.costs, items: newItems })
+}
+
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value)
 }
@@ -42,9 +64,38 @@ function formatCurrency(value: number): string {
 
 <template>
   <section class="mb-10">
-    <div class="mb-5">
+    <div class="flex items-center justify-between mb-5">
       <h2 class="text-lg font-semibold text-warm-800">Kostenoverzicht</h2>
+      <button
+        class="text-sm font-medium text-accent-500 hover:text-accent-600 transition-colors"
+        @click="showForm = !showForm"
+      >
+        {{ showForm ? 'Annuleren' : '+ Kostenpost' }}
+      </button>
     </div>
+
+    <!-- Add form -->
+    <Transition name="fade">
+      <form
+        v-if="showForm"
+        class="mb-4 bg-white rounded-xl border border-warm-200 p-4 flex gap-3"
+        @submit.prevent="addItem"
+      >
+        <input
+          v-model="newLabel"
+          type="text"
+          placeholder="Naam kostenpost"
+          required
+          class="flex-1 px-3 py-2 rounded-lg border border-warm-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
+        />
+        <button
+          type="submit"
+          class="px-4 py-2 bg-accent-500 text-white rounded-lg text-sm font-medium hover:bg-accent-600 transition-colors"
+        >
+          Toevoegen
+        </button>
+      </form>
+    </Transition>
 
     <!-- Bouwdepot summary -->
     <div class="bg-white rounded-xl border border-warm-200 p-5 mb-4">
@@ -98,8 +149,18 @@ function formatCurrency(value: number): string {
       <div
         v-for="(item, i) in props.costs.items"
         :key="item.id"
-        class="bg-white rounded-xl border border-warm-200 p-4"
+        class="group bg-white rounded-xl border border-warm-200 p-4 relative"
       >
+        <!-- Delete button -->
+        <button
+          class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-warm-300 hover:text-red-500 transition-all"
+          @click="removeItem(i)"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <div class="flex items-center gap-2 mb-3">
           <div
             class="w-3 h-3 rounded-full"

@@ -2,8 +2,10 @@ interface Todo {
   id: string
   title: string
   category: string
+  assignee: string
   completed: boolean
   createdAt: string
+  order: number
 }
 
 export function useTodos() {
@@ -12,16 +14,6 @@ export function useTodos() {
 
   const completedCount = computed(() => todos.value.filter((t) => t.completed).length)
   const totalCount = computed(() => todos.value.length)
-
-  const todosByCategory = computed(() => {
-    const grouped: Record<string, Todo[]> = {}
-    for (const todo of todos.value) {
-      const cat = todo.category || 'overig'
-      if (!grouped[cat]) grouped[cat] = []
-      grouped[cat].push(todo)
-    }
-    return grouped
-  })
 
   async function fetchTodos() {
     loading.value = true
@@ -32,7 +24,7 @@ export function useTodos() {
     }
   }
 
-  async function addTodo(data: { title: string; category: string }) {
+  async function addTodo(data: { title: string; category: string; assignee?: string }) {
     await $fetch('/api/todos', { method: 'POST', body: data })
     await fetchTodos()
   }
@@ -47,10 +39,19 @@ export function useTodos() {
     await fetchTodos()
   }
 
+  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category'>>) {
+    await $fetch(`/api/todos/${id}`, { method: 'PATCH', body: data })
+    await fetchTodos()
+  }
+
   async function deleteTodo(id: string) {
     await $fetch(`/api/todos/${id}`, { method: 'DELETE' })
     await fetchTodos()
   }
 
-  return { todos, loading, completedCount, totalCount, todosByCategory, fetchTodos, addTodo, toggleTodo, deleteTodo }
+  async function reorderTodos(ids: string[]) {
+    todos.value = await $fetch<Todo[]>('/api/todos/reorder', { method: 'POST', body: { ids } })
+  }
+
+  return { todos, loading, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, updateTodo, deleteTodo, reorderTodos }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, deleteEvent } = useTimeline()
-const { todos, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, deleteTodo } = useTodos()
-const { costs, totalBudget, totalSpent, remaining, fetchCosts } = useCosts()
+const { todos, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, updateTodo, deleteTodo, reorderTodos } = useTodos()
+const { costs, totalSpent, remaining, fetchCosts } = useCosts()
 
 const categories = ref<{ id: string; label: string; color: string }[]>([])
 
@@ -20,6 +20,10 @@ onMounted(async () => {
     }),
   ])
 })
+
+function handleUpdateAssignee(id: string, assignee: string) {
+  updateTodo(id, { assignee })
+}
 </script>
 
 <template>
@@ -47,6 +51,8 @@ onMounted(async () => {
         @toggle="toggleTodo"
         @delete="deleteTodo"
         @add="addTodo"
+        @update-assignee="handleUpdateAssignee"
+        @reorder="reorderTodos"
       />
     </main>
 
