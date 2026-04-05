@@ -10,7 +10,8 @@ WORKDIR /app
 RUN addgroup -S app && adduser -S app -G app
 RUN apk add --no-cache curl
 COPY --from=builder /app/.output .output
-RUN mkdir -p /app/data && chown -R app:app /app
+COPY --from=builder /app/data ./data
+RUN chown -R app:app /app
 USER app
 EXPOSE 3000
 ENV NODE_ENV=production
