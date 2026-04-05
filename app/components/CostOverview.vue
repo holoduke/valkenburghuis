@@ -2,8 +2,7 @@
 interface CostItem {
   id: string
   label: string
-  budget: number
-  spent: number
+  amount: number
 }
 
 interface CostsData {
@@ -13,15 +12,12 @@ interface CostsData {
 
 const props = defineProps<{
   costs: CostsData
-  totalBudget: number
   totalSpent: number
   remaining: number
-  saving: boolean
 }>()
 
 const emit = defineEmits<{
   'update:costs': [costs: CostsData]
-  save: []
 }>()
 
 const COLORS = ['#EC4899', '#8B5CF6', '#EF4444', '#A855F7', '#22C55E']
@@ -31,10 +27,10 @@ function updateBouwdepot(value: string) {
   emit('update:costs', { ...props.costs, bouwdepot: num })
 }
 
-function updateItem(index: number, field: 'budget' | 'spent', value: string) {
+function updateItem(index: number, value: string) {
   const num = parseFloat(value) || 0
   const newItems = props.costs.items.map((item, i) =>
-    i === index ? { ...item, [field]: num } : item,
+    i === index ? { ...item, amount: num } : item,
   )
   emit('update:costs', { ...props.costs, items: newItems })
 }
@@ -42,28 +38,12 @@ function updateItem(index: number, field: 'budget' | 'spent', value: string) {
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value)
 }
-
-function barWidth(item: CostItem): string {
-  if (item.budget === 0) return '0%'
-  const pct = Math.min((item.spent / item.budget) * 100, 100)
-  return `${pct}%`
-}
 </script>
 
 <template>
   <section class="mb-10">
-    <div class="flex items-center justify-between mb-5">
+    <div class="mb-5">
       <h2 class="text-lg font-semibold text-warm-800">Kostenoverzicht</h2>
-      <button
-        class="text-sm font-medium px-4 py-1.5 rounded-lg transition-all"
-        :class="saving
-          ? 'bg-warm-200 text-warm-400 cursor-wait'
-          : 'bg-accent-500 text-white hover:bg-accent-600'"
-        :disabled="saving"
-        @click="emit('save')"
-      >
-        {{ saving ? 'Opslaan...' : 'Opslaan' }}
-      </button>
     </div>
 
     <!-- Bouwdepot summary -->
@@ -83,11 +63,7 @@ function barWidth(item: CostItem): string {
         </div>
         <div class="flex gap-6 text-sm">
           <div>
-            <p class="text-warm-500">Toegewezen</p>
-            <p class="font-semibold text-warm-800">{{ formatCurrency(totalBudget) }}</p>
-          </div>
-          <div>
-            <p class="text-warm-500">Besteed</p>
+            <p class="text-warm-500">Totaal kosten</p>
             <p class="font-semibold text-warm-800">{{ formatCurrency(totalSpent) }}</p>
           </div>
           <div>
@@ -109,16 +85,16 @@ function barWidth(item: CostItem): string {
           :key="item.id"
           class="h-full transition-all duration-500"
           :style="{
-            width: `${(item.budget / props.costs.bouwdepot) * 100}%`,
+            width: `${(item.amount / props.costs.bouwdepot) * 100}%`,
             backgroundColor: COLORS[i % COLORS.length],
-            opacity: item.budget > 0 ? 1 : 0,
+            opacity: item.amount > 0 ? 1 : 0,
           }"
         />
       </div>
     </div>
 
     <!-- Cost items grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       <div
         v-for="(item, i) in props.costs.items"
         :key="item.id"
@@ -132,46 +108,15 @@ function barWidth(item: CostItem): string {
           <h3 class="text-sm font-semibold text-warm-800">{{ item.label }}</h3>
         </div>
 
-        <div class="space-y-2">
-          <div>
-            <label class="text-[11px] text-warm-400 uppercase tracking-wide">Budget</label>
-            <div class="relative">
-              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-warm-400 text-xs">&euro;</span>
-              <input
-                type="number"
-                :value="item.budget"
-                class="w-full pl-6 pr-2 py-1.5 rounded-lg border border-warm-200 text-sm font-medium text-warm-800 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
-                @input="updateItem(i, 'budget', ($event.target as HTMLInputElement).value)"
-              />
-            </div>
-          </div>
-          <div>
-            <label class="text-[11px] text-warm-400 uppercase tracking-wide">Besteed</label>
-            <div class="relative">
-              <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-warm-400 text-xs">&euro;</span>
-              <input
-                type="number"
-                :value="item.spent"
-                class="w-full pl-6 pr-2 py-1.5 rounded-lg border border-warm-200 text-sm font-medium text-warm-800 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
-                @input="updateItem(i, 'spent', ($event.target as HTMLInputElement).value)"
-              />
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress bar -->
-        <div class="mt-3 h-1.5 bg-warm-100 rounded-full overflow-hidden">
-          <div
-            class="h-full rounded-full transition-all duration-500"
-            :style="{
-              width: barWidth(item),
-              backgroundColor: COLORS[i % COLORS.length],
-            }"
+        <div class="relative">
+          <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-warm-400 text-xs">&euro;</span>
+          <input
+            type="number"
+            :value="item.amount"
+            class="w-full pl-6 pr-2 py-1.5 rounded-lg border border-warm-200 text-sm font-medium text-warm-800 focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
+            @input="updateItem(i, ($event.target as HTMLInputElement).value)"
           />
         </div>
-        <p class="text-[11px] text-warm-400 mt-1 text-right">
-          {{ item.budget > 0 ? `${Math.round((item.spent / item.budget) * 100)}%` : '-' }}
-        </p>
       </div>
     </div>
   </section>

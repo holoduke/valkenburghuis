@@ -17,8 +17,7 @@ export interface TimelineEvent {
 export interface CostItem {
   id: string
   label: string
-  budget: number
-  spent: number
+  amount: number
 }
 
 export interface CostsData {

@@ -1,8 +1,7 @@
 interface CostItem {
   id: string
   label: string
-  budget: number
-  spent: number
+  amount: number
 }
 
 interface CostsData {
@@ -13,18 +12,16 @@ interface CostsData {
 export function useCosts() {
   const costs = ref<CostsData>({ bouwdepot: 0, items: [] })
   const loading = ref(false)
-  const saving = ref(false)
-
-  const totalBudget = computed(() =>
-    costs.value.items.reduce((sum, item) => sum + item.budget, 0),
-  )
+  let saveTimeout: ReturnType<typeof setTimeout> | null = null
 
   const totalSpent = computed(() =>
-    costs.value.items.reduce((sum, item) => sum + item.spent, 0),
+    costs.value.items.reduce((sum, item) => sum + item.amount, 0),
   )
 
+  const totalBudget = totalSpent
+
   const remaining = computed(() =>
-    costs.value.bouwdepot - totalBudget.value,
+    costs.value.bouwdepot - totalSpent.value,
   )
 
   async function fetchCosts() {
@@ -37,16 +34,20 @@ export function useCosts() {
   }
 
   async function saveCosts() {
-    saving.value = true
-    try {
-      costs.value = await $fetch<CostsData>('/api/costs', {
-        method: 'PATCH',
-        body: costs.value,
-      })
-    } finally {
-      saving.value = false
-    }
+    await $fetch<CostsData>('/api/costs', {
+      method: 'PATCH',
+      body: costs.value,
+    })
   }
 
-  return { costs, loading, saving, totalBudget, totalSpent, remaining, fetchCosts, saveCosts }
+  function debouncedSave() {
+    if (saveTimeout) clearTimeout(saveTimeout)
+    saveTimeout = setTimeout(() => saveCosts(), 500)
+  }
+
+  watch(costs, () => {
+    if (!loading.value) debouncedSave()
+  }, { deep: true })
+
+  return { costs, loading, totalBudget, totalSpent, remaining, fetchCosts }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, deleteEvent } = useTimeline()
 const { todos, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, deleteTodo } = useTodos()
-const { costs, totalBudget, totalSpent, remaining, saving, fetchCosts, saveCosts } = useCosts()
+const { costs, totalBudget, totalSpent, remaining, fetchCosts } = useCosts()
 
 const categories = ref<{ id: string; label: string; color: string }[]>([])
 
@@ -36,12 +36,9 @@ onMounted(async () => {
 
       <CostOverview
         :costs="costs"
-        :total-budget="totalBudget"
         :total-spent="totalSpent"
         :remaining="remaining"
-        :saving="saving"
         @update:costs="costs = $event"
-        @save="saveCosts"
       />
 
       <TodoSection
