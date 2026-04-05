@@ -1,86 +1,121 @@
 [
   {
-    "id": "td_gietvloer",
-    "title": "Gietvloer offertes opvragen en vergelijken",
-    "category": "vloeren",
+    "id": "td_01",
+    "title": "Van Kees (aannemer) de planning voor oplevering krijgen",
+    "category": "aannemer",
     "completed": false,
-    "createdAt": "2026-04-01T10:00:00.000Z"
+    "createdAt": "2026-04-05T10:00:00.000Z"
   },
   {
-    "id": "td_parket",
-    "title": "Parket of laminaat uitzoeken voor slaapkamers",
-    "category": "vloeren",
+    "id": "td_02",
+    "title": "Van Kees prijsopgave ontvangen",
+    "category": "aannemer",
     "completed": false,
-    "createdAt": "2026-04-01T10:05:00.000Z"
+    "createdAt": "2026-04-05T10:01:00.000Z"
   },
   {
-    "id": "td_keuken",
-    "title": "Keukenontwerp definitief maken",
-    "category": "keuken",
+    "id": "td_03",
+    "title": "Offerte van Kees moet worden aangepast op basis van extra werk",
+    "category": "aannemer",
     "completed": false,
-    "createdAt": "2026-04-01T10:10:00.000Z"
+    "createdAt": "2026-04-05T10:02:00.000Z"
   },
   {
-    "id": "td_keuken_app",
-    "title": "Keukenapparatuur bestellen",
-    "category": "keuken",
+    "id": "td_04",
+    "title": "Checken wat oplever kwaliteit is van de muren",
+    "category": "aannemer",
     "completed": false,
-    "createdAt": "2026-04-01T10:15:00.000Z"
+    "createdAt": "2026-04-05T10:03:00.000Z"
   },
   {
-    "id": "td_bad_tegels",
-    "title": "Badkamer tegels uitzoeken",
-    "category": "badkamer",
+    "id": "td_05",
+    "title": "Offerte van gietvloer Hollandse Bodem bekijken",
+    "category": "vloer",
     "completed": false,
-    "createdAt": "2026-04-01T10:20:00.000Z"
+    "createdAt": "2026-04-05T10:04:00.000Z"
   },
   {
-    "id": "td_bad_kranen",
-    "title": "Sanitair en kranen kiezen",
-    "category": "badkamer",
+    "id": "td_06",
+    "title": "Plinten regelen, eventueel ook bij Hollandse Bodem",
+    "category": "vloer",
     "completed": false,
-    "createdAt": "2026-04-01T10:25:00.000Z"
+    "createdAt": "2026-04-05T10:05:00.000Z"
   },
   {
-    "id": "td_stopcontacten",
-    "title": "Stopcontacten en lichtpunten plan maken",
-    "category": "elektra",
+    "id": "td_07",
+    "title": "Tijdlijn bepalen voor vloer leggen",
+    "category": "vloer",
     "completed": false,
-    "createdAt": "2026-04-01T10:30:00.000Z"
+    "createdAt": "2026-04-05T10:06:00.000Z"
   },
   {
-    "id": "td_verlichting",
-    "title": "Verlichtingsplan opstellen",
-    "category": "elektra",
-    "completed": false,
-    "createdAt": "2026-04-01T10:35:00.000Z"
-  },
-  {
-    "id": "td_kleuren",
-    "title": "Kleurenschema voor muren kiezen",
+    "id": "td_08",
+    "title": "Offertes van schilderen bekijken en 1 selecteren",
     "category": "schilderwerk",
     "completed": false,
-    "createdAt": "2026-04-01T10:40:00.000Z"
+    "createdAt": "2026-04-05T10:07:00.000Z"
   },
   {
-    "id": "td_tuin",
-    "title": "Tuinontwerp laten maken",
+    "id": "td_09",
+    "title": "Schilder bellen om meer informatie te delen",
+    "category": "schilderwerk",
+    "completed": false,
+    "createdAt": "2026-04-05T10:08:00.000Z"
+  },
+  {
+    "id": "td_10",
+    "title": "Tijdlijn bepalen voor schilderen",
+    "category": "schilderwerk",
+    "completed": false,
+    "createdAt": "2026-04-05T10:09:00.000Z"
+  },
+  {
+    "id": "td_11",
+    "title": "Tegelplan maken voor badkamer eerste verdieping en op zolder",
+    "category": "badkamer",
+    "completed": false,
+    "createdAt": "2026-04-05T10:10:00.000Z"
+  },
+  {
+    "id": "td_12",
+    "title": "Tijdlijn bepalen voor keuken inbouw",
+    "category": "keuken",
+    "completed": false,
+    "createdAt": "2026-04-05T10:11:00.000Z"
+  },
+  {
+    "id": "td_13",
+    "title": "Factuur Merijn bepalen",
+    "category": "interieur",
+    "completed": false,
+    "createdAt": "2026-04-05T10:12:00.000Z"
+  },
+  {
+    "id": "td_14",
+    "title": "Kleurpalet met Merijn (interieur design) voor hele huis",
+    "category": "interieur",
+    "completed": false,
+    "createdAt": "2026-04-05T10:13:00.000Z"
+  },
+  {
+    "id": "td_15",
+    "title": "Prijs ontvangen van maatwerk kasten",
+    "category": "interieur",
+    "completed": false,
+    "createdAt": "2026-04-05T10:14:00.000Z"
+  },
+  {
+    "id": "td_16",
+    "title": "Tuin: ontwerp en planning maken",
     "category": "tuin",
     "completed": false,
-    "createdAt": "2026-04-01T10:45:00.000Z"
+    "createdAt": "2026-04-05T10:15:00.000Z"
   },
   {
-    "id": "td_schutting",
-    "title": "Schutting of hekwerk uitzoeken",
-    "category": "tuin",
-    "completed": false,
-    "createdAt": "2026-04-01T10:50:00.000Z"
-  },
-  {
-    "id": "td_gordijnen",
-    "title": "Raambekleding uitzoeken",
+    "id": "td_17",
+    "title": "Verhuisbedrijf benaderen en offertes aanvragen",
     "category": "overig",
     "completed": false,
-    "createdAt": "2026-04-01T10:55:00.000Z"
+    "createdAt": "2026-04-05T10:16:00.000Z"
   }
 ]

@@ -1,51 +1,37 @@
 [
   {
-    "id": "tl_fundament",
-    "date": "2026-01-15",
-    "title": "Fundering",
-    "description": "Fundering gestort",
-    "completed": true
-  },
-  {
-    "id": "tl_ruwbouw",
-    "date": "2026-03-01",
-    "title": "Ruwbouw",
-    "description": "Muren en constructie",
-    "completed": true
-  },
-  {
-    "id": "tl_dak",
-    "date": "2026-04-15",
-    "title": "Dak",
-    "description": "Dakconstructie en pannen",
-    "completed": false
-  },
-  {
-    "id": "tl_install",
-    "date": "2026-05-15",
-    "title": "Installaties",
-    "description": "Elektra, water, verwarming",
-    "completed": false
-  },
-  {
-    "id": "tl_afwerk",
-    "date": "2026-07-01",
-    "title": "Afwerking",
-    "description": "Stucwerk, schilderwerk, vloeren",
-    "completed": false
-  },
-  {
-    "id": "tl_tuin",
-    "date": "2026-08-01",
-    "title": "Tuin & Terrein",
-    "description": "Tuinaanleg en bestrating",
-    "completed": false
-  },
-  {
     "id": "tl_oplever",
-    "date": "2026-09-01",
+    "date": "2026-08-01",
     "title": "Oplevering",
-    "description": "Eindkeuring en sleuteloverdracht",
+    "description": "Sleuteloverdracht van aannemer",
+    "completed": false
+  },
+  {
+    "id": "tl_schilder",
+    "date": "2026-08-04",
+    "title": "Schilderen",
+    "description": "1 week \u2013 hele huis schilderen",
+    "completed": false
+  },
+  {
+    "id": "tl_vloer",
+    "date": "2026-08-11",
+    "title": "Vloer leggen",
+    "description": "1 week \u2013 gietvloer leggen",
+    "completed": false
+  },
+  {
+    "id": "tl_keuken",
+    "date": "2026-08-18",
+    "title": "Keuken inbouw",
+    "description": "3 weken \u2013 keuken plaatsen",
+    "completed": false
+  },
+  {
+    "id": "tl_klaar",
+    "date": "2026-09-08",
+    "title": "Klaar!",
+    "description": "Huis gereed voor bewoning",
     "completed": false
   }
 ]
