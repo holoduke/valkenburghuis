@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gietvloer Vergelijking - Nieuwbouw Valkenburg (ZH)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; padding: 20px; }
+.container { max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 1.8em; margin-bottom: 5px; color: #1b5e20; }
+.subtitle { color: #666; margin-bottom: 20px; font-size: 0.95em; }
+.project-info { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.project-info h2 { font-size: 1.1em; color: #1b5e20; margin-bottom: 10px; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.project-item { background: #f8f9fa; padding: 10px 14px; border-radius: 8px; }
+.project-item .label { font-size: 0.78em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.project-item .value { font-weight: 600; margin-top: 2px; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
+.summary-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+.summary-card .number { font-size: 2em; font-weight: 700; }
+.summary-card .desc { font-size: 0.85em; color: #666; margin-top: 4px; }
+.green { color: #27ae60; } .blue { color: #2980b9; } .orange { color: #e67e22; } .purple { color: #8e44ad; }
+.section-title { font-size: 1.2em; color: #1b5e20; margin: 25px 0 15px; padding-bottom: 8px; border-bottom: 2px solid #c8e6c9; }
+.offerte-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #27ae60; }
+.offerte-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+.offerte-name { font-size: 1.15em; font-weight: 700; }
+.offerte-price { font-size: 1.4em; font-weight: 700; color: #27ae60; }
+.offerte-details { margin-top: 12px; }
+.offerte-details table { width: 100%; border-collapse: collapse; }
+.offerte-details td { padding: 5px 10px 5px 0; font-size: 0.9em; vertical-align: top; }
+.offerte-details td:first-child { color: #888; white-space: nowrap; width: 180px; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+.badge-green { background: #d5f5e3; color: #1e8449; }
+.badge-orange { background: #fdebd0; color: #d35400; }
+.badge-red { background: #fadbd8; color: #c0392b; }
+.badge-blue { background: #d6eaf8; color: #2471a3; }
+.badge-purple { background: #e8daef; color: #7d3c98; }
+.price-compare { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.price-bar { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.price-bar .label { width: 220px; font-weight: 600; font-size: 0.9em; flex-shrink: 0; }
+.price-bar .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 8px; height: 32px; position: relative; overflow: hidden; }
+.price-bar .bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: #fff; font-weight: 700; font-size: 0.85em; min-width: 100px; }
+.bar-green { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.bar-blue { background: linear-gradient(90deg, #2980b9, #3498db); }
+.bar-orange { background: linear-gradient(90deg, #d35400, #e67e22); }
+.bar-teal { background: linear-gradient(90deg, #16a085, #1abc9c); }
+.bar-purple { background: linear-gradient(90deg, #8e44ad, #9b59b6); }
+.bar-red { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.winner { background: #f0fff4; border: 2px solid #27ae60; }
+.notes { background: #fffbea; border-radius: 10px; padding: 15px 18px; margin-top: 12px; font-size: 0.88em; color: #856404; border: 1px solid #ffeeba; }
+.compare-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.compare-table th { background: #e8f5e9; padding: 10px 8px; text-align: left; font-size: 0.78em; color: #2e7d32; border-bottom: 2px solid #c8e6c9; }
+.compare-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 0.82em; }
+.compare-table tr:hover { background: #f8fdf8; }
+.highlight { background: #f0fff4 !important; font-weight: 600; }
+.status-card { background: #fff; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.status-card .name { font-weight: 600; }
+.status-card .info { font-size: 0.85em; color: #888; }
+.score-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.score-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.score-name { font-size: 1.1em; font-weight: 700; }
+.score-number { font-size: 1.8em; font-weight: 800; }
+.score-bar { height: 8px; background: #f0f0f0; border-radius: 4px; margin: 6px 0; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 4px; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; }
+.feature { display: flex; align-items: center; gap: 6px; font-size: 0.85em; padding: 4px 8px; border-radius: 6px; background: #f8f9fa; }
+.feature .icon { font-size: 1.1em; }
+.updated { text-align: center; color: #aaa; font-size: 0.8em; margin-top: 30px; padding: 15px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Gietvloer Vergelijking</h1>
+  <p class="subtitle">Nieuwbouw De Hoop, Valkenburg (ZH) — Oplevering zomer 2026</p>
+
+  <div class="project-info">
+    <h2>Projectgegevens</h2>
+    <div class="project-grid">
+      <div class="project-item"><div class="label">Woonoppervlak</div><div class="value">210 m² (BG + 1e + zolder)</div></div>
+      <div class="project-item"><div class="label">Garage</div><div class="value">23,5 m²</div></div>
+      <div class="project-item"><div class="label">Ondergrond BG</div><div class="value">90 m² zandcement</div></div>
+      <div class="project-item"><div class="label">Ondergrond verdieping</div><div class="value">120 m² Fermacell</div></div>
+      <div class="project-item"><div class="label">Kleur</div><div class="value">Tortora Brown (two-tone)</div></div>
+      <div class="project-item"><div class="label">Type bouw</div><div class="value">Nieuwbouw (21% BTW)</div></div>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card"><div class="number green">8</div><div class="desc">Offertes ontvangen</div></div>
+    <div class="summary-card"><div class="number purple">2</div><div class="desc">Reactie (actie nodig)</div></div>
+    <div class="summary-card"><div class="number" style="color:#e67e22">3</div><div class="desc">Afwachten</div></div>
+    <div class="summary-card"><div class="number blue">13</div><div class="desc">Totaal benaderd</div></div>
+  </div>
+
+  <!-- GENORMALISEERDE PRIJSVERGELIJKING -->
+  <div class="section-title">Prijsvergelijking — genormaliseerd op 210m² + garage, incl. 21% BTW</div>
+  <div class="price-compare">
+    <div class="price-bar">
+      <div class="label">Vepox</div>
+      <div class="bar-wrap"><div class="bar bar-orange" style="width:57%">€ 19.177</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Janmaat Vloeren</div>
+      <div class="bar-wrap"><div class="bar bar-green" style="width:58%">€ 19.637</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Next Level (excl. plinten)</div>
+      <div class="bar-wrap"><div class="bar bar-purple" style="width:59%">€ 19.805*</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Creafloors</div>
+      <div class="bar-wrap"><div class="bar bar-teal" style="width:61%">€ 20.612</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Van Hollandse Bodem</div>
+      <div class="bar-wrap"><div class="bar bar-blue" style="width:62%">€ 20.818</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Uniek Gietvloeren (geschat)</div>
+      <div class="bar-wrap"><div class="bar bar-purple" style="width:68%">€ 22.800*</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Gietvloerenstore</div>
+      <div class="bar-wrap"><div class="bar bar-blue" style="width:75%">€ 25.428</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Grijs Beton Design (geschat)</div>
+      <div class="bar-wrap"><div class="bar bar-red" style="width:100%">€ 33.750*</div></div>
+    </div>
+    <div class="notes">
+      <strong>* Geschatte/excl. prijzen:</strong><br>
+      • <strong>Vepox</strong>: offerte volledig €19.177 incl. BTW<br>
+      • <strong>Next Level Vloeren</strong>: totaalprijs incl. plinten (180m1) is €21.754. Excl. plinten ~€19.805. Prijs per m² woning €87,95 excl. BTW.<br>
+      • <strong>Uniek Gietvloeren</strong>: offerte is €20.714 excl. garage. Garage geschat op ~€1.700 (epoxy 23,5m²) → totaal ~€22.800 incl. BTW<br>
+      • <strong>Grijs Beton Design</strong>: offerte is €25.899 voor 150m² + garage. Zolder 60m² ontbreekt! Geschat +60m² × €109/m² × 1,21 = +€7.913 → totaal ~€33.750 incl. BTW
+    </div>
+  </div>
+
+  <!-- SCOREKAARTEN -->
+  <div class="section-title">Beoordeling per bedrijf</div>
+
+  <!-- JANMAAT 7.5 -->
+  <div class="score-card" style="border-left:4px solid #27ae60">
+    <div class="score-header">
+      <div class="score-name">1. Janmaat Vloeren — €19.637 incl. BTW</div>
+      <div class="score-number" style="color:#27ae60">7,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:75%;background:#27ae60"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Laagste prijs (€69/m²)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen</div>
+      <div class="feature"><span class="icon">🔧</span> Opschuren + primer incl.</div>
+      <div class="feature"><span class="icon">🛡️</span> PU UV-gietvloer alifatisch</div>
+      <div class="feature"><span class="icon">🧱</span> Epoxy schraplaag ✅</div>
+      <div class="feature"><span class="icon">✨</span> Slijtvaste matlaag (toplaag) ✅</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie: opschuren (basis)</div>
+      <div class="feature"><span class="icon">📅</span> Zomer 2026 reservering mogelijk</div>
+      <div class="feature"><span class="icon">⭐</span> Google: 4,1/5 (68 reviews)</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 8,5/10</div>
+      <div class="feature"><span class="icon">🏢</span> Sinds 1996 (~30 jaar ervaring)</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Betalingsvoorwaarden: niet vermeld</div>
+      <div class="feature"><span class="icon">🏪</span> Showroom: ja, op afspraak</div>
+    </div>
+  </div>
+
+  <!-- CREAFLOORS 7.5 -->
+  <div class="score-card" style="border-left:4px solid #1abc9c">
+    <div class="score-header">
+      <div class="score-name">2. Creafloors — €20.612 incl. BTW</div>
+      <div class="score-number" style="color:#1abc9c">7,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:75%;background:#1abc9c"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Scherpe prijs (€68,57/m²)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (€940 excl.)</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie verdiepingen incl. (~€1.750)</div>
+      <div class="feature"><span class="icon">🛡️</span> PU gietvloer alifatisch ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Epoxy primer + schraplaag ✅</div>
+      <div class="feature"><span class="icon">✨</span> Tweemaal aflakken (toplaag) ✅</div>
+      <div class="feature"><span class="icon">🏗️</span> Kantband (losliggend bij wanden) ✅</div>
+      <div class="feature"><span class="icon">⏱️</span> 8 werkdagen uitvoering</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 9,9/10 — Top 10 Rotterdam</div>
+      <div class="feature"><span class="icon">⭐</span> Eigen site: 5,0/5 (24 reviews)</div>
+      <div class="feature"><span class="icon">🏢</span> 20+ jaar ervaring</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">🏪</span> Showroom Rotterdam, op afspraak</div>
+      <div class="feature"><span class="icon">⚠️</span> Excl. parkeerkosten</div>
+    </div>
+  </div>
+
+  <!-- VAN HOLLANDSE BODEM 9.0 -->
+  <div class="score-card" style="border-left:4px solid #2980b9">
+    <div class="score-header">
+      <div class="score-name">3. Van Hollandse Bodem — €20.818 incl. BTW</div>
+      <div class="score-number" style="color:#2980b9">9,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:90%;background:#2980b9"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Goede prijs (~€77/m² all-in)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (€1.175)</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie 1e+2e verd. incl. (€2.744) ✅</div>
+      <div class="feature"><span class="icon">🛡️</span> Alifatische PU Klasse A (NOA) ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Consoliderende onderlaag ✅</div>
+      <div class="feature"><span class="icon">✨</span> Zijdematte toplaag ✅</div>
+      <div class="feature"><span class="icon">🔒</span> 5 jaar garantie (NOA) ✅</div>
+      <div class="feature"><span class="icon">⭐</span> Feedback Company: 9,2/10 (171 reviews)</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 8,8/10</div>
+      <div class="feature"><span class="icon">🏢</span> 25+ jaar ervaring, 5000+ vloeren gelegd</div>
+      <div class="feature"><span class="icon">👷</span> Eigen vakmensen 30+ jaar</div>
+      <div class="feature"><span class="icon">📏</span> Digitaal inmeten, betaal alleen gerealiseerde m²</div>
+      <div class="feature"><span class="icon">🎨</span> Elke RAL/NCS/Sikkens kleur mogelijk</div>
+      <div class="feature"><span class="icon">🏪</span> 800m² showroom, ook op zaterdag</div>
+      <div class="feature"><span class="icon">💳</span> 30% vooraf, 70% bij aanvang</div>
+      <div class="feature"><span class="icon">📅</span> Vol t/m eind mei, daarna ruimte</div>
+      <div class="feature"><span class="icon">⏱️</span> ~12 weken doorlooptijd na ondertekening</div>
+      <div class="feature"><span class="icon">📋</span> Offerte geldig 3 maanden (t/m 30 juni)</div>
+    </div>
+  </div>
+
+  <!-- NEXT LEVEL VLOEREN 8.0 -->
+  <div class="score-card" style="border-left:4px solid #8e44ad">
+    <div class="score-header">
+      <div class="score-name">4. Next Level Vloeren — €21.754 incl. BTW (incl. plinten)</div>
+      <div class="score-number" style="color:#8e44ad">8,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:80%;background:#8e44ad"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> €87,95/m² excl. BTW (BG + verd. zelfde prijs)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (24m² epoxy €59,95/m²)</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie + vezelmat BG (GOLD LINE) ✅</div>
+      <div class="feature"><span class="icon">🛡️</span> UV bestendige PU gietvloer ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Epoxy schraplaag 1kg/m² ✅</div>
+      <div class="feature"><span class="icon">✨</span> 2 lagen topcoating BG (GOLD) / 1 laag verd. (COPPER)</div>
+      <div class="feature"><span class="icon">🔒</span> Scheuroverbruggend vezelmat (BG) ✅</div>
+      <div class="feature"><span class="icon">📏</span> Plinten inbegrepen (180m1 MDF, €1.611)</div>
+      <div class="feature"><span class="icon">🏗️</span> Werkbezoek met app-rapportage (€85)</div>
+      <div class="feature"><span class="icon">📅</span> Zomer 2026 past in planning</div>
+      <div class="feature"><span class="icon">⭐</span> Showroom Krommenie, op afspraak</div>
+      <div class="feature"><span class="icon">🏢</span> Klein bedrijf, eigen vakmensen</div>
+      <div class="feature"><span class="icon">📋</span> Geldig 30 dagen (t/m 30 april)</div>
+      <div class="feature"><span class="icon">💳</span> Niet vermeld</div>
+    </div>
+  </div>
+
+  <!-- VEPOX 7.5 -->
+  <div class="score-card" style="border-left:4px solid #d35400">
+    <div class="score-header">
+      <div class="score-name">5. Vepox Gietvloeren — €19.177 incl. BTW</div>
+      <div class="score-number" style="color:#d35400">7,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:75%;background:#d35400"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Zeer scherpe prijs (€72,35/m² excl. BTW)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (23m² EP coating €28,50/m²)</div>
+      <div class="feature"><span class="icon">📐</span> Fermacell naden dichten met EP plamuur ✅</div>
+      <div class="feature"><span class="icon">🛡️</span> PU gietvloer Romar Voss (grain flow Tortora Brown) ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Epoxy schraplaag 1kg/m² ✅</div>
+      <div class="feature"><span class="icon">✨</span> 2K PU coating (PU 50) toplaag ✅</div>
+      <div class="feature"><span class="icon">🔒</span> NOA-lid (algemene voorwaarden NOA)</div>
+      <div class="feature"><span class="icon">💳</span> Betaling 14 dagen na factuur</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: standaard uitsluitingen vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Planning: in overleg</div>
+      <div class="feature"><span class="icon">📍</span> Roosendaal (verder weg)</div>
+      <div class="feature"><span class="icon">📞</span> Edwin Vermeulen · 0630712767</div>
+    </div>
+  </div>
+
+  <!-- GIETVLOERENSTORE 7.0 -->
+  <div class="score-card" style="border-left:4px solid #8e44ad">
+    <div class="score-header">
+      <div class="score-name">6. Gietvloerenstore — €25.428 incl. BTW</div>
+      <div class="score-number" style="color:#8e44ad">7,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:70%;background:#8e44ad"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Duurder (€90/m² excl. BTW)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (€2.115 excl.)</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie tot 5mm inbegrepen ✅</div>
+      <div class="feature"><span class="icon">🛡️</span> PU UV proof Klasse A Design ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Epoxy primer + schraplaag ✅</div>
+      <div class="feature"><span class="icon">✨</span> Mat aflakken (toplaag) ✅</div>
+      <div class="feature"><span class="icon">⭐</span> MTMO: 9,8/10</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Betalingsvoorwaarden: niet vermeld</div>
+      <div class="feature"><span class="icon">🏪</span> Showroom Rhoon</div>
+      <div class="feature"><span class="icon">📋</span> Offerte geldig t/m 28 juni</div>
+    </div>
+  </div>
+
+  <!-- UNIEK GIETVLOEREN 6.5 -->
+  <div class="score-card" style="border-left:4px solid #e67e22">
+    <div class="score-header">
+      <div class="score-name">7. Uniek Gietvloeren — €20.714 incl. BTW (excl. garage!)</div>
+      <div class="score-number" style="color:#e67e22">6,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:65%;background:#e67e22"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Laag m²-prijs (€60,52/m²)</div>
+      <div class="feature"><span class="icon">❌</span> Garage NIET inbegrepen</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie apart: €21/m² = €4.410</div>
+      <div class="feature"><span class="icon">🛡️</span> Uniek Advanced systeem</div>
+      <div class="feature"><span class="icon">❓</span> Schraplaag/opbouw: niet gespecificeerd</div>
+      <div class="feature"><span class="icon">❓</span> Toplaag: niet gespecificeerd</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 9,6/10 — Top 10 Waddinxveen</div>
+      <div class="feature"><span class="icon">🏢</span> Sinds 2005 (~21 jaar ervaring)</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">⚠️</span> Geldig slechts t/m 29 april!</div>
+      <div class="feature"><span class="icon">💳</span> 50% aanbetaling 4 wk vooraf</div>
+      <div class="feature"><span class="icon">🏪</span> Showroom Waddinxveen</div>
+    </div>
+  </div>
+
+  <!-- GRIJS BETON DESIGN 6.0 -->
+  <div class="score-card" style="border-left:4px solid #e74c3c">
+    <div class="score-header">
+      <div class="score-name">8. Grijs Beton Design — €25.899 incl. BTW (excl. zolder 60m²!)</div>
+      <div class="score-number" style="color:#e74c3c">6,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:60%;background:#e74c3c"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Duurste (€109/m², geschat ~€33.750 totaal)</div>
+      <div class="feature"><span class="icon">✅</span> Garage inbegrepen (€63/m² coating)</div>
+      <div class="feature"><span class="icon">📐</span> Egalisatie BG+1e incl. (€20,47/m²) ✅</div>
+      <div class="feature"><span class="icon">🛡️</span> PU gietvloer handmatig two-tone ✅</div>
+      <div class="feature"><span class="icon">❓</span> Schraplaag: niet gespecificeerd</div>
+      <div class="feature"><span class="icon">❓</span> Toplaag: niet gespecificeerd</div>
+      <div class="feature"><span class="icon">❌</span> Zolder (60m²) ontbreekt!</div>
+      <div class="feature"><span class="icon">⭐</span> Geen online reviews gevonden</div>
+      <div class="feature"><span class="icon">🏆</span> Genomineerd Sterkste Schakel Rijnland</div>
+      <div class="feature"><span class="icon">👨‍👩‍👦</span> Familiebedrijf (Agnes & Michel Kappe)</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">💳</span> 50% deelfactuur bij opdracht</div>
+      <div class="feature"><span class="icon">🏠</span> Sassenheim — lokaal bedrijf</div>
+      <div class="feature"><span class="icon">👀</span> Showroom bezocht met Ilse + kids</div>
+      <div class="feature"><span class="icon">🎨</span> Tortora Brown two-tone, uniek karakter</div>
+    </div>
+  </div>
+
+  <!-- GEDETAILLEERDE VERGELIJKINGSTABEL -->
+  <div class="section-title">Gedetailleerde vergelijking (alle 8 offertes)</div>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:130px">Kenmerk</th>
+        <th>Vepox</th>
+        <th>Janmaat</th>
+        <th>Next Level</th>
+        <th>Creafloors</th>
+        <th>Van Hollandse Bodem</th>
+        <th>Gietvloerenstore</th>
+        <th>Uniek Gietvloeren</th>
+        <th>Grijs Beton Design</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Product</strong></td>
+        <td>PU Romar Voss grain flow</td>
+        <td>PU UV alifatisch</td>
+        <td>UV bestendige PU (GOLD/COPPER)</td>
+        <td>PU alifatisch</td>
+        <td>Alifatische PU Klasse A (NOA)</td>
+        <td>PU UV proof Klasse A Design</td>
+        <td>Uniek Advanced systeem</td>
+        <td>PU gietvloer handmatig two-tone</td>
+      </tr>
+      <tr>
+        <td><strong>Opp</strong></td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>✅ 210 m²</td>
+        <td>❌ 150 m² (zolder ontbreekt)</td>
+      </tr>
+      <tr>
+        <td><strong>Garage</strong></td>
+        <td>✅ 23m² EP coating (Arturo)</td>
+        <td>✅ Garage incl.</td>
+        <td>✅ 24m² epoxy</td>
+        <td>✅ Garage incl. (€940 excl.)</td>
+        <td>✅ 24m² incl. (€1.175)</td>
+        <td>✅ Garage incl. (€2.115 excl.)</td>
+        <td>❌ NIET inbegrepen</td>
+        <td>✅ Garage incl. (€63/m²)</td>
+      </tr>
+      <tr>
+        <td><strong>Egalisatie</strong></td>
+        <td>🔧 Fermacell naden dichten</td>
+        <td>🔧 Opschuren (basis)</td>
+        <td>✅ Vezelmat + egaline (BG GOLD)</td>
+        <td>✅ Verdiepingen incl. (~€1.750)</td>
+        <td>✅ 1e+2e verd. incl. (€2.744)</td>
+        <td>✅ Tot 5mm inbegrepen</td>
+        <td>📐 Apart: €21/m²</td>
+        <td>✅ BG+1e incl. (€20,47/m²)</td>
+      </tr>
+      <tr>
+        <td><strong>Primer</strong></td>
+        <td>✅ EP primerlaag</td>
+        <td>✅ Opschuren + primer</td>
+        <td>✅ Schuren + primer</td>
+        <td>✅ EP primer</td>
+        <td>✅ Consolidering</td>
+        <td>✅ Primer</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+      </tr>
+      <tr>
+        <td><strong>Schraplaag</strong></td>
+        <td>✅ EP schraplaag 1kg/m²</td>
+        <td>✅ Epoxy schraplaag</td>
+        <td>✅ Epoxy schraplaag 1kg/m²</td>
+        <td>✅ EP schraplaag</td>
+        <td>✅ Consolidering</td>
+        <td>✅ EP schraplaag</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+      </tr>
+      <tr>
+        <td><strong>Toplaag</strong></td>
+        <td>✅ 2K PU coating (PU 50)</td>
+        <td>✅ Slijtvaste matlaag</td>
+        <td>✅ 2 lagen topcoating (GOLD/COPPER)</td>
+        <td>✅ Tweemaal aflakken</td>
+        <td>✅ Zijdematte toplaag</td>
+        <td>✅ Mat aflakken</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+      </tr>
+      <tr>
+        <td><strong>Prijs/m²</strong></td>
+        <td>€72,35 excl.</td>
+        <td>€69 excl.</td>
+        <td>€87,95 excl.</td>
+        <td>€68,57 excl.</td>
+        <td>~€77 excl. (all-in)</td>
+        <td>€90 excl.</td>
+        <td>€60,52 excl. (+€21 egal.)</td>
+        <td>€109 excl.</td>
+      </tr>
+      <tr>
+        <td><strong>Totaal excl. BTW</strong></td>
+        <td>€15.849</td>
+        <td>€16.229</td>
+        <td>€17.979 (incl. plinten)</td>
+        <td>€17.035</td>
+        <td>€17.205</td>
+        <td>€21.015</td>
+        <td>€17.119</td>
+        <td>€21.404</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Totaal incl. BTW</strong></td>
+        <td><strong style="color:#d35400">€19.177</strong></td>
+        <td><strong style="color:#27ae60">€19.637</strong></td>
+        <td><strong style="color:#8e44ad">€21.754</strong> (incl. plinten)</td>
+        <td>€20.612</td>
+        <td>€20.818</td>
+        <td>€25.428</td>
+        <td>€20.714 (excl. garage)</td>
+        <td>€25.899 (excl. zolder)</td>
+      </tr>
+      <tr class="highlight" style="background:#fff3e0 !important">
+        <td><strong>Geschat 210m²+garage</strong></td>
+        <td><strong style="color:#d35400">€19.177</strong></td>
+        <td><strong style="color:#27ae60">€19.637</strong></td>
+        <td><em style="color:#8e44ad">€19.805*</em></td>
+        <td>€20.612</td>
+        <td>€20.818</td>
+        <td>€25.428</td>
+        <td><em>~€22.800</em></td>
+        <td><em style="color:#e74c3c">~€33.750</em></td>
+      </tr>
+      <tr>
+        <td><strong>Garantie</strong></td>
+        <td>NOA voorwaarden (std. uitsluitingen)</td>
+        <td>❓</td>
+        <td>Richtlijnen SBR CUR</td>
+        <td>❓</td>
+        <td>✅ 5 jaar (NOA)</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+      </tr>
+      <tr>
+        <td><strong>Geldigheid</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>30 april 2026</td>
+        <td>—</td>
+        <td>30 juni 2026</td>
+        <td>28 juni 2026</td>
+        <td style="color:#e74c3c"><strong>29 april!</strong></td>
+        <td>~19 mei 2026</td>
+      </tr>
+      <tr>
+        <td><strong>Offertedatum</strong></td>
+        <td>1 april 2026</td>
+        <td>31 maart 2026</td>
+        <td>31 maart 2026</td>
+        <td>31 maart 2026</td>
+        <td>31 maart 2026</td>
+        <td>30 maart 2026</td>
+        <td>30 maart 2026</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Betaling</strong></td>
+        <td>14 dagen na factuur</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>30%/70%</td>
+        <td>—</td>
+        <td>50%/50%</td>
+        <td>50% bij opdracht</td>
+      </tr>
+      <tr>
+        <td><strong>Planning</strong></td>
+        <td>In overleg</td>
+        <td>📅 Zomer 2026 reserveerbaar</td>
+        <td>📅 Zomer 2026, ruimte in planning</td>
+        <td>—</td>
+        <td>📅 Vol t/m eind mei, daarna ruimte. ~12 wk doorlooptijd</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Uitvoerduur</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>8 werkdagen</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Showroom</strong></td>
+        <td>—</td>
+        <td>🏪 Op afspraak</td>
+        <td>🏪 Krommenie</td>
+        <td>🏪 Rotterdam</td>
+        <td>🏪 800m² Gorinchem</td>
+        <td>🏪 Rhoon</td>
+        <td>🏪 Waddinxveen</td>
+        <td>👀 <strong>Bezocht!</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Vestiging</strong></td>
+        <td>Roosendaal</td>
+        <td>Krimpen a/d Lek</td>
+        <td>Krommenie</td>
+        <td>Rotterdam</td>
+        <td>Gorinchem</td>
+        <td>Rhoon</td>
+        <td>Waddinxveen</td>
+        <td>Sassenheim (lokaal)</td>
+      </tr>
+      <tr>
+        <td><strong>Reviews</strong></td>
+        <td>Nog niet gevonden</td>
+        <td>Google 4,1/5 (68)<br>Trustoo 8,5</td>
+        <td>Nog niet gevonden</td>
+        <td>Trustoo 9,9<br>Site 5,0/5 (24)</td>
+        <td>FC 9,2/10 (171)<br>Trustoo 8,8</td>
+        <td>MTMO 9,8/10</td>
+        <td>Trustoo 9,6</td>
+        <td>Geen gevonden<br>Sterkste Schakel nom.</td>
+      </tr>
+      <tr>
+        <td><strong>Ervaring</strong></td>
+        <td>NOA-lid</td>
+        <td>Sinds 1996 (~30 jr)</td>
+        <td>Klein bedrijf, eigen mensen</td>
+        <td>20+ jaar</td>
+        <td>25+ jaar, 5000+ vloeren</td>
+        <td>—</td>
+        <td>Sinds 2005 (~21 jr)</td>
+        <td>Familiebedrijf</td>
+      </tr>
+      <tr>
+        <td><strong>Contact</strong></td>
+        <td>Edwin · 0630712767</td>
+        <td>info@janmaatvloeren.nl</td>
+        <td>nextlevelgietvloeren@gmail.com</td>
+        <td>Aileen · 0618348091</td>
+        <td>Addy · 0183-624626</td>
+        <td>Maaike · 085-4877019</td>
+        <td>0182-205051</td>
+        <td>Agnes · 0252-212322</td>
+      </tr>
+      <tr>
+        <td><strong>Score</strong></td>
+        <td style="color:#d35400"><strong>7,5</strong></td>
+        <td style="color:#27ae60"><strong>7,5</strong></td>
+        <td style="color:#8e44ad"><strong>8,0</strong></td>
+        <td style="color:#1abc9c"><strong>7,5</strong></td>
+        <td style="color:#2980b9"><strong>9,0</strong></td>
+        <td style="color:#8e44ad"><strong>7,0</strong></td>
+        <td style="color:#e67e22"><strong>6,5</strong></td>
+        <td style="color:#e74c3c"><strong>6,0</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- CONCLUSIE -->
+  <div class="notes" style="margin-top:20px">
+    <strong>Conclusie & Rangschikking (genormaliseerd op 210m² + garage):</strong><br><br>
+    🥇 <strong>Vepox Gietvloeren — €19.177</strong> (score 7,5) — Laagste prijs, complete opbouw (primer, schraplaag, PU coating). NOA-lid. Romar Voss product. Betaling 14 dagen. Verder weg (Roosendaal).<br>
+    🥈 <strong>Janmaat Vloeren — €19.637</strong> (score 7,5) — Op-één-na goedkoopst. Complete offerte. Degelijke opbouw met schraplaag + toplaag. Weinig info over garantie/betaling.<br>
+    🥉 <strong>Van Hollandse Bodem — €20.818</strong> (score 9,0) — Beste prijs-kwaliteitverhouding! NOA-lid, 5 jaar garantie, 9.1/10 reviews, eigen vakmensen 30+ jaar. Digitaal inmeten, betaal alleen gerealiseerde m². Grote showroom. Iets duurder maar veel meer zekerheid.<br><br>
+    4. <strong>Next Level Vloeren — €19.805 excl. plinten / €21.754 incl.</strong> (score 8,0) — Zeer gedetailleerde offerte. GOLD LINE met vezelmat (scheuroverbruggend). Plinten, werkbezoek, droogloopmat incl. Klein bedrijf eigen mensen. Showroom Krommenie.<br>
+    5. <strong>Creafloors — €20.612</strong> (score 7,5) — Complete opbouw (epoxy primer, schraplaag, 2× aflakken). Egalisatie verdiepingen inbegrepen. 8 werkdagen. Trustoo 9,9/10.<br>
+    6. <strong>Uniek Gietvloeren — ~€22.800 geschat</strong> (score 6,5) — Excl. garage en onduidelijke opbouw. Korte geldigheid (29 april!). Lage m²-prijs maar veel onduidelijk.<br>
+    7. <strong>Gietvloerenstore — €25.428</strong> (score 7,0) — Complete offerte maar fors duurder. €90/m² is 30% meer dan Vepox/Janmaat/Creafloors.<br>
+    8. <strong>Grijs Beton Design — ~€33.750 geschat</strong> (score 6,0) — Duurste optie. Mist zolder. Wel lokaal en showroom bezocht. Two-tone karakter uniek.<br><br>
+    <strong>Advies:</strong> Vepox biedt de laagste prijs (€19.177) met complete opbouw. Van Hollandse Bodem biedt de beste combinatie van prijs, kwaliteit en zekerheid (NOA, garantie, reviews). Janmaat en Creafloors zitten daar goed tussen in. Showroom Van Hollandse Bodem bezoeken!<br><br>
+    <strong>Actiepunten:</strong><br>
+    ⏰ Offerte Uniek Gietvloeren verloopt 29 april<br>
+    ⏰ Offerte Next Level Vloeren verloopt 30 april<br>
+    📞 Gietvloer Garant: afspraak inplannen als je interesse hebt<br>
+    🖥️ G-vloeren: online formulier invullen als je interesse hebt
+  </div>
+
+  <!-- REACTIE ONTVANGEN — ACTIE NODIG -->
+  <div class="section-title">Reactie ontvangen — actie nodig</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">Gietvloer Garant</span>
+      <span class="info">Haarlem (Tappersweg 13) · info@gietvloergarant.nl · 085-3036821 · Aiden Grau</span>
+      <span class="badge badge-purple">Wil eerst afspraak/showroom</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">G-vloeren</span>
+      <span class="info">Amsterdam (Overtoom 477) · info@g-vloeren.nl · 020-8463694 · Tsavrir Kotzér</span>
+      <span class="badge badge-purple">Verwijst naar online formulier</span>
+    </div>
+  </div>
+
+  <!-- OFFERTE VERSTUURD — AFWACHTEN -->
+  <div class="section-title">Offerte verstuurd — geen reactie (30 maart 2026)</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card"><span class="name">Mark Your Floor</span><span class="info">Reeuwijk (ZH) · info@markyourfloor.nl</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">De Gietvloer Designers</span><span class="info">Asperen (ZH grens) · info@degietvloerdesigners.nl</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Gietvloer Compleet</span><span class="info">Culemborg (werkt in ZH/NH) · info@gietvloercompleet.nl</span><span class="badge badge-orange">Afwachten</span></div>
+  </div>
+
+  <div class="updated">Laatst bijgewerkt: 1 april 2026, 18:00</div>
+</div>
+</body>
+</html>

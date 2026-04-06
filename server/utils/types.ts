@@ -1,9 +1,15 @@
+export interface TodoLink {
+  label: string
+  url: string
+}
+
 export interface Todo {
   id: string
   title: string
   category: string
   assignee: string
   notes: string
+  links: TodoLink[]
   completed: boolean
   createdAt: string
   order: number

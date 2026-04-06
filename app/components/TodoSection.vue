@@ -4,6 +4,8 @@ interface Todo {
   title: string
   category: string
   assignee: string
+  notes: string
+  links: { label: string; url: string }[]
   completed: boolean
   createdAt: string
   order: number
@@ -206,6 +208,7 @@ function onDrop() {
         :title="todo.title"
         :completed="todo.completed"
         :assignee="todo.assignee || ''"
+        :has-links="(todo.links?.length ?? 0) > 0"
         :category-color="getCategoryColor(todo.category)"
         :category-label="getCategoryLabel(todo.category)"
         @toggle="emit('toggle', $event)"

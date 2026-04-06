@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schilders Vergelijking - Nieuwbouw Valkenburg (ZH)</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; padding: 20px; }
+.container { max-width: 1400px; margin: 0 auto; }
+h1 { font-size: 1.8em; margin-bottom: 5px; color: #1565c0; }
+.subtitle { color: #666; margin-bottom: 20px; font-size: 0.95em; }
+.project-info { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.project-info h2 { font-size: 1.1em; color: #1565c0; margin-bottom: 10px; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.project-item { background: #f8f9fa; padding: 10px 14px; border-radius: 8px; }
+.project-item .label { font-size: 0.78em; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.project-item .value { font-weight: 600; margin-top: 2px; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
+.summary-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center; }
+.summary-card .number { font-size: 2em; font-weight: 700; }
+.summary-card .desc { font-size: 0.85em; color: #666; margin-top: 4px; }
+.green { color: #27ae60; } .blue { color: #2980b9; } .orange { color: #e67e22; } .purple { color: #8e44ad; } .red { color: #e74c3c; }
+.section-title { font-size: 1.2em; color: #1565c0; margin: 25px 0 15px; padding-bottom: 8px; border-bottom: 2px solid #bbdefb; }
+.offerte-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #2980b9; }
+.offerte-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+.offerte-name { font-size: 1.15em; font-weight: 700; }
+.offerte-price { font-size: 1.4em; font-weight: 700; color: #2980b9; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+.badge-green { background: #d5f5e3; color: #1e8449; }
+.badge-orange { background: #fdebd0; color: #d35400; }
+.badge-red { background: #fadbd8; color: #c0392b; }
+.badge-blue { background: #d6eaf8; color: #2471a3; }
+.badge-purple { background: #e8daef; color: #7d3c98; }
+.price-compare { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.price-bar { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+.price-bar .label { width: 260px; font-weight: 600; font-size: 0.9em; flex-shrink: 0; }
+.price-bar .bar-wrap { flex: 1; background: #f0f0f0; border-radius: 8px; height: 32px; position: relative; overflow: hidden; }
+.price-bar .bar { height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: #fff; font-weight: 700; font-size: 0.85em; min-width: 100px; }
+.bar-green { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.bar-blue { background: linear-gradient(90deg, #2980b9, #3498db); }
+.bar-orange { background: linear-gradient(90deg, #e67e22, #f39c12); }
+.bar-teal { background: linear-gradient(90deg, #16a085, #1abc9c); }
+.bar-purple { background: linear-gradient(90deg, #8e44ad, #9b59b6); }
+.bar-red { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.bar-brown { background: linear-gradient(90deg, #d35400, #e67e22); }
+.winner { background: #f0f8ff; border: 2px solid #2980b9; }
+.notes { background: #fffbea; border-radius: 10px; padding: 15px 18px; margin-top: 12px; font-size: 0.88em; color: #856404; border: 1px solid #ffeeba; }
+.compare-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.compare-table th { background: #e3f2fd; padding: 10px 8px; text-align: left; font-size: 0.78em; color: #1565c0; border-bottom: 2px solid #bbdefb; }
+.compare-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; font-size: 0.82em; }
+.compare-table tr:hover { background: #f8fbff; }
+.highlight { background: #f0f8ff !important; font-weight: 600; }
+.status-card { background: #fff; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.status-card .name { font-weight: 600; }
+.status-card .info { font-size: 0.85em; color: #888; }
+.score-card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.score-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.score-name { font-size: 1.1em; font-weight: 700; }
+.score-number { font-size: 1.8em; font-weight: 800; }
+.score-bar { height: 8px; background: #f0f0f0; border-radius: 4px; margin: 6px 0; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 4px; }
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px; margin-top: 10px; }
+.feature { display: flex; align-items: center; gap: 6px; font-size: 0.85em; padding: 4px 8px; border-radius: 6px; background: #f8f9fa; }
+.feature .icon { font-size: 1.1em; }
+.updated { text-align: center; color: #aaa; font-size: 0.8em; margin-top: 30px; padding: 15px; }
+.warning-box { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 10px; padding: 12px 16px; margin-top: 8px; font-size: 0.85em; color: #e65100; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Schilders Vergelijking</h1>
+  <p class="subtitle">Nieuwbouw De Hoop, Valkenburg (ZH) — Oplevering zomer 2026</p>
+
+  <div class="project-info">
+    <h2>Projectgegevens</h2>
+    <div class="project-grid">
+      <div class="project-item"><div class="label">Muren</div><div class="value">~400 m²</div></div>
+      <div class="project-item"><div class="label">Plafonds</div><div class="value">~210 m²</div></div>
+      <div class="project-item"><div class="label">Garage</div><div class="value">~65 m² (wanden + plafond)</div></div>
+      <div class="project-item"><div class="label">Totaal oppervlak</div><div class="value">~675 m²</div></div>
+      <div class="project-item"><div class="label">Werkzaamheden</div><div class="value">Latex binnenschilderwerk</div></div>
+      <div class="project-item"><div class="label">Type bouw</div><div class="value">Nieuwbouw (21% BTW)</div></div>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="summary-card"><div class="number green">8</div><div class="desc">Offertes ontvangen</div></div>
+    <div class="summary-card"><div class="number purple">6</div><div class="desc">Offerte verwacht</div></div>
+    <div class="summary-card"><div class="number orange">1</div><div class="desc">Actie nodig</div></div>
+    <div class="summary-card"><div class="number red">2</div><div class="desc">Niet beschikbaar</div></div>
+    <div class="summary-card"><div class="number blue">27</div><div class="desc">Totaal benaderd</div></div>
+  </div>
+
+  <!-- PRIJSVERGELIJKING -->
+  <div class="section-title">Prijsvergelijking — latex binnenschilderwerk, incl. 21% BTW</div>
+  <div class="price-compare">
+    <div class="price-bar">
+      <div class="label">Schreuder ⚠️ sauzen, 9% BTW</div>
+      <div class="bar-wrap"><div class="bar bar-red" style="width:28%">€ 5.830*</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">WSP Schilderwerken (1× sauzen)</div>
+      <div class="bar-wrap"><div class="bar bar-orange" style="width:50%">€ 10.463</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Alpha Paint (spuiten + rollen)</div>
+      <div class="bar-wrap"><div class="bar bar-green" style="width:51%">€ 10.539</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Verzaal Klusbedrijf</div>
+      <div class="bar-wrap"><div class="bar bar-teal" style="width:52%">€ 10.769</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">De Oude Ambacht (geschat)</div>
+      <div class="bar-wrap"><div class="bar bar-brown" style="width:56%">€ 11.586</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Van der Blom (latex, geschat)</div>
+      <div class="bar-wrap"><div class="bar bar-green" style="width:69%">€ 14.289*</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">MnR Schildersbedrijf</div>
+      <div class="bar-wrap"><div class="bar bar-blue" style="width:74%">€ 15.388</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Bouwsector NL (rolwerk)</div>
+      <div class="bar-wrap"><div class="bar bar-teal" style="width:76%">€ 15.681</div></div>
+    </div>
+    <div class="price-bar">
+      <div class="label">Bouwsector NL (spuitwerk)</div>
+      <div class="bar-wrap"><div class="bar bar-purple" style="width:100%">€ 20.746</div></div>
+    </div>
+    <div class="notes">
+      <strong>* Let op bij prijsvergelijking:</strong><br>
+      &bull; <strong>Schreuder</strong>: offert sauzen (niet latex), excl. garage, en hanteert 9% BTW (fout — nieuwbouw = 21%). Bij 21% BTW zou dit €6.471 zijn. Niet vergelijkbaar met overige offertes.<br>
+      &bull; <strong>WSP Schilderwerken</strong>: 1× sauzen (niet latex). €15,50/m² incl. BTW. Sigma. Niet vergelijkbaar met latex offertes.<br>
+      &bull; <strong>De Oude Ambacht</strong>: prijzen vermoedelijk excl. BTW. Geschat: plafonds 210×€13 + muren wit 200×€14 + muren kleur 200×€16 + garage 65×€13 = ~€9.575 excl. → ~€11.586 incl. 21% BTW.<br>
+      &bull; <strong>Verzaal</strong>: €14,52/m² incl. BTW wit, +€4,84/m² kleur. Geschat: plafonds 210 + muren wit 200 + garage 65 = 475×€14,52 + muren kleur 200×€19,36 = ~€10.769 incl. BTW. Trimetal verf.<br>
+      &bull; <strong>Alpha Paint</strong>: €8.710 excl. → €10.539 incl. 21% BTW voor ~670 m². Plafonds gespoten + wanden gerold, SPS Multi Matt. Incl. fixprimer, afkitten en reparaties. Garage vermoedelijk inbegrepen (670 ≈ 675m²).<br>
+      &bull; <strong>Van der Blom</strong>: offerte geeft €17,50/m² voor latex. Geschat op ~675m² = €11.813 excl. → €14.293 incl. 21% BTW. Exacte offertebedrag kan afwijken. Ook optie met renovlies: ~€26.136 incl. BTW.
+    </div>
+  </div>
+
+  <!-- SCOREKAARTEN -->
+  <div class="section-title">Beoordeling per bedrijf</div>
+
+  <!-- VAN DER BLOM 7.5 -->
+  <div class="score-card" style="border-left:4px solid #27ae60">
+    <div class="score-header">
+      <div class="score-name">Schildersbedrijf R.J. van der Blom & Zn. — ~€14.289 incl. BTW (geschat)</div>
+      <div class="score-number" style="color:#27ae60">7,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:75%;background:#27ae60"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Laagste m²-prijs: €17,50/m² latex</div>
+      <div class="feature"><span class="icon">🎨</span> Sigma materialen</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: latex ✅</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: latex ✅</div>
+      <div class="feature"><span class="icon">❓</span> Garage: niet vermeld in offerte</div>
+      <div class="feature"><span class="icon">📋</span> Optie renovlies: €32/m² (~€26.136 incl.)</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 8,9/10 — Top 10 Leiden</div>
+      <div class="feature"><span class="icon">🏢</span> Familiebedrijf, 25+ jaar ervaring</div>
+      <div class="feature"><span class="icon">🛡️</span> VOL-VCA gecertificeerd</div>
+      <div class="feature"><span class="icon">📚</span> Erkend leerbedrijf</div>
+      <div class="feature"><span class="icon">🌱</span> Milieubewust werken</div>
+      <div class="feature"><span class="icon">📍</span> Leiderdorp — lokaal bedrijf</div>
+    </div>
+  </div>
+
+  <!-- ALPHA PAINT 7.5 -->
+  <div class="score-card" style="border-left:4px solid #27ae60">
+    <div class="score-header">
+      <div class="score-name">Alpha Paint Schilderwerken — €10.539 incl. BTW</div>
+      <div class="score-number" style="color:#27ae60">7,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:75%;background:#27ae60"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Scherpe prijs: €8.710 excl. / €10.539 incl. BTW</div>
+      <div class="feature"><span class="icon">🎨</span> SPS Multi Matt (plafonds wit, wanden lichte kleur)</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: 2× dekkend gespoten ✅</div>
+      <div class="feature"><span class="icon">🧱</span> Wanden: 2× gerold ✅</div>
+      <div class="feature"><span class="icon">🔧</span> Fixprimer + afkitten acrylaat non-crack</div>
+      <div class="feature"><span class="icon">🔧</span> Kleine beschadigingen repareren met fijngips</div>
+      <div class="feature"><span class="icon">🪟</span> Kozijnen/ramen/deuren afplakken met folie</div>
+      <div class="feature"><span class="icon">✅</span> 21% BTW correct gehanteerd</div>
+      <div class="feature"><span class="icon">📏</span> ~670 m² (vermoedelijk incl. garage)</div>
+      <div class="feature"><span class="icon">🏷️</span> Keurmerk "De Betere Schilder" (sinds 2005)</div>
+      <div class="feature"><span class="icon">⭐</span> KiyOh: 98% aanbeveling</div>
+      <div class="feature"><span class="icon">🏢</span> 25 jaar ervaring — Alphen a/d Rijn</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">📍</span> René van Amsterdam · 06-53348356</div>
+    </div>
+  </div>
+
+  <!-- DE OUDE AMBACHT 7.0 -->
+  <div class="score-card" style="border-left:4px solid #d35400">
+    <div class="score-header">
+      <div class="score-name">De Oude Ambacht Schilderwerken — ~€11.586 incl. BTW (geschat)</div>
+      <div class="score-number" style="color:#d35400">7,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:70%;background:#d35400"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Plafonds €13/m², muren wit €14/m², kleur €16/m²</div>
+      <div class="feature"><span class="icon">🎨</span> Glidden Tex Matt (4 lagen totaal)</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: latex ✅</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: latex ✅</div>
+      <div class="feature"><span class="icon">❓</span> Garage: niet vermeld</div>
+      <div class="feature"><span class="icon">🔧</span> Voorstrijk Sigmafix Universal + Glidden Primertex</div>
+      <div class="feature"><span class="icon">🛡️</span> Schrobklasse 1 latex</div>
+      <div class="feature"><span class="icon">🧹</span> Machinaal schuren (Planex)</div>
+      <div class="feature"><span class="icon">🔍</span> Tussenlaags controle en reparatie</div>
+      <div class="feature"><span class="icon">🧱</span> Naden afkitten met Soudal Acryrub CF2</div>
+      <div class="feature"><span class="icon">⚠️</span> Meerwerk bij slecht stucwerk (vooraf overleg)</div>
+      <div class="feature"><span class="icon">📍</span> Contact: Stephan Visser · 0648663327</div>
+    </div>
+  </div>
+
+  <!-- MNR 7.0 -->
+  <div class="score-card" style="border-left:4px solid #2980b9">
+    <div class="score-header">
+      <div class="score-name">MnR Schildersbedrijf — €15.388 incl. BTW</div>
+      <div class="score-number" style="color:#2980b9">7,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:70%;background:#2980b9"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Muren €18,20/m², plafonds €20,20/m²</div>
+      <div class="feature"><span class="icon">🎨</span> Sigma Perfect Matt</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: latex ✅</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: latex ✅</div>
+      <div class="feature"><span class="icon">❓</span> Garage: niet vermeld</div>
+      <div class="feature"><span class="icon">⏰</span> Geldig t/m 14 april 2026!</div>
+      <div class="feature"><span class="icon">⭐</span> Website reviews: zeer positief</div>
+      <div class="feature"><span class="icon">⭐</span> Stukadoorgids: 10/10 (2 reviews)</div>
+      <div class="feature"><span class="icon">🏢</span> Opgericht 2023 — jong bedrijf</div>
+      <div class="feature"><span class="icon">💬</span> Goede communicatie (WhatsApp/telefoon)</div>
+      <div class="feature"><span class="icon">🧹</span> Netjes en efficiënt werken</div>
+      <div class="feature"><span class="icon">📍</span> Blaricum (werkt in heel NL)</div>
+    </div>
+  </div>
+
+  <!-- VERZAAL 6.5 -->
+  <div class="score-card" style="border-left:4px solid #8e44ad">
+    <div class="score-header">
+      <div class="score-name">Verzaal Klusbedrijf — ~€10.769 incl. BTW (geschat)</div>
+      <div class="score-number" style="color:#8e44ad">6,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:65%;background:#8e44ad"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Wit/licht: €14,52/m² incl. BTW</div>
+      <div class="feature"><span class="icon">💰</span> Meerprijs kleur: +€4,84/m² incl. BTW</div>
+      <div class="feature"><span class="icon">🎨</span> Trimetal primer + Trimetal Magnarol</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: latex ✅</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: latex ✅</div>
+      <div class="feature"><span class="icon">❓</span> Garage: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Planning: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Aantal lagen: niet vermeld</div>
+      <div class="feature"><span class="icon">📍</span> Dirk Verzaal · dirk.schilderwerken@ziggo.nl</div>
+    </div>
+  </div>
+
+  <!-- BOUWSECTOR NL 6.5 -->
+  <div class="score-card" style="border-left:4px solid #1abc9c">
+    <div class="score-header">
+      <div class="score-name">Bouwsector Nederland (rolwerk) — €15.681 incl. BTW</div>
+      <div class="score-number" style="color:#1abc9c">6,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:65%;background:#1abc9c"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Rolwerk: €15.681 incl. BTW</div>
+      <div class="feature"><span class="icon">💰</span> Spuitwerk: €20.746 incl. BTW</div>
+      <div class="feature"><span class="icon">🎨</span> Sigma verf</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: latex ✅</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: latex ✅</div>
+      <div class="feature"><span class="icon">✅</span> Garage: inbegrepen</div>
+      <div class="feature"><span class="icon">🏷️</span> 15% korting bij >400m²</div>
+      <div class="feature"><span class="icon">⭐</span> Trustpilot: 3,2/5 (1 review)</div>
+      <div class="feature"><span class="icon">⚠️</span> Groot landelijk netwerk (300+ vakmensen)</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Planning: niet vermeld</div>
+      <div class="feature"><span class="icon">📍</span> Landelijk — geen lokale vestiging</div>
+    </div>
+  </div>
+
+  <!-- WSP 6.0 -->
+  <div class="score-card" style="border-left:4px solid #e67e22">
+    <div class="score-header">
+      <div class="score-name">WSP Schilderwerken — ~€10.463 incl. BTW (geschat, 1× sauzen)</div>
+      <div class="score-number" style="color:#e67e22">6,0</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:60%;background:#e67e22"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> €15,50/m² incl. BTW (1× sauzen)</div>
+      <div class="feature"><span class="icon">🎨</span> Sigma afneembare latex</div>
+      <div class="feature"><span class="icon">⚠️</span> 1× sauzen (niet 2× latex!)</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: sauzen ⚠️</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: sauzen ⚠️</div>
+      <div class="feature"><span class="icon">❓</span> Garage: niet vermeld</div>
+      <div class="feature"><span class="icon">🏷️</span> Keurmerk "De Betere Schilder"</div>
+      <div class="feature"><span class="icon">💰</span> 2× sauzen bij donkere kleuren (apart tarief)</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">📍</span> Walter Pen · 0653772351</div>
+    </div>
+  </div>
+
+  <!-- SCHREUDER 5.5 -->
+  <div class="score-card" style="border-left:4px solid #e74c3c">
+    <div class="score-header">
+      <div class="score-name">Schreuder Glas- en Schilderwerken — €5.830 incl. 9% BTW</div>
+      <div class="score-number" style="color:#e74c3c">5,5</div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width:55%;background:#e74c3c"></div></div>
+    <div class="feature-grid">
+      <div class="feature"><span class="icon">💰</span> Laagste prijs maar niet vergelijkbaar</div>
+      <div class="feature"><span class="icon">🎨</span> Sauzen (géén latex!) — fixeren + 2× dekkend sauzen</div>
+      <div class="feature"><span class="icon">🧱</span> Muren: 400m² × €8,78/m² = €3.511 (sauzen ⚠️)</div>
+      <div class="feature"><span class="icon">🔝</span> Plafonds: 210m² × €8,75/m² = €1.838 (sauzen ⚠️)</div>
+      <div class="feature"><span class="icon">❌</span> Garage: NIET inbegrepen</div>
+      <div class="feature"><span class="icon">⚠️</span> 9% BTW gehanteerd (fout! Nieuwbouw = 21%)</div>
+      <div class="feature"><span class="icon">⭐</span> Trustoo: 9,1/10 — Top 10 Noordwijk</div>
+      <div class="feature"><span class="icon">⭐</span> Homedeal: 8,3/10</div>
+      <div class="feature"><span class="icon">⚠️</span> Radar-klachten over garantieafhandeling</div>
+      <div class="feature"><span class="icon">🏢</span> Noordwijk — gevestigd bedrijf</div>
+      <div class="feature"><span class="icon">💳</span> Betaling: 14 dagen na factuurdatum</div>
+      <div class="feature"><span class="icon">📅</span> Geldig t/m 1 juni 2026 (2 maanden)</div>
+      <div class="feature"><span class="icon">🅿️</span> Parkeerkosten extra</div>
+      <div class="feature"><span class="icon">❓</span> Garantie: niet vermeld</div>
+      <div class="feature"><span class="icon">❓</span> Planning: niet vermeld</div>
+    </div>
+    <div class="warning-box">
+      <strong>⚠️ Let op:</strong> Schreuder hanteert 9% BTW — dit is het verlaagde tarief voor renovatie. Bij nieuwbouw geldt 21% BTW. Gecorrigeerd bedrag: €6.471. Daarnaast offert Schreuder sauzen i.p.v. latex, en is de garage niet inbegrepen. Deze offerte is niet één-op-één vergelijkbaar met de overige.
+    </div>
+  </div>
+
+  <!-- GEDETAILLEERDE VERGELIJKINGSTABEL -->
+  <div class="section-title">Gedetailleerde vergelijking (alle 8 offertes)</div>
+  <div style="overflow-x:auto">
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th style="width:140px">Kenmerk</th>
+        <th>Van der Blom</th>
+        <th>De Oude Ambacht</th>
+        <th>MnR</th>
+        <th>Verzaal</th>
+        <th>Bouwsector NL (rol)</th>
+        <th>Bouwsector NL (spuit)</th>
+        <th>WSP</th>
+        <th>Alpha Paint</th>
+        <th>Schreuder</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Type werk</strong></td>
+        <td>Latex</td>
+        <td>Latex (4 lagen)</td>
+        <td>Latex (Sigma Perfect Matt)</td>
+        <td>Latex</td>
+        <td>Latex (rollen, Sigma)</td>
+        <td>Latex (spuiten, Sigma)</td>
+        <td>⚠️ Sauzen (1×)</td>
+        <td>Latex (spuiten + rollen)</td>
+        <td>⚠️ Sauzen (fixeren + 2× dekkend)</td>
+      </tr>
+      <tr>
+        <td><strong>Verfmerk</strong></td>
+        <td>Sigma</td>
+        <td>Glidden Tex Matt</td>
+        <td>Sigma Perfect Matt</td>
+        <td>Trimetal Magnarol</td>
+        <td>Sigma</td>
+        <td>Sigma</td>
+        <td>Sigma</td>
+        <td>SPS Multi Matt</td>
+        <td>Niet vermeld</td>
+      </tr>
+      <tr>
+        <td><strong>Muren</strong></td>
+        <td>✅ €17,50/m²</td>
+        <td>✅ €14/m² wit, €16/m² kleur</td>
+        <td>✅ €18,20/m²</td>
+        <td>✅ €14,52/m² incl.</td>
+        <td>✅ Inbegrepen</td>
+        <td>✅ Inbegrepen</td>
+        <td>⚠️ 1× sauzen</td>
+        <td>✅ 2× gerold</td>
+        <td>⚠️ Sauzen €8,78/m²</td>
+      </tr>
+      <tr>
+        <td><strong>Plafonds</strong></td>
+        <td>✅ €17,50/m²</td>
+        <td>✅ €13/m²</td>
+        <td>✅ €20,20/m²</td>
+        <td>✅ €14,52/m² incl.</td>
+        <td>✅ Inbegrepen</td>
+        <td>✅ Inbegrepen</td>
+        <td>⚠️ 1× sauzen</td>
+        <td>✅ 2× gespoten</td>
+        <td>⚠️ Sauzen €8,75/m²</td>
+      </tr>
+      <tr>
+        <td><strong>Garage</strong></td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Niet vermeld</td>
+        <td>✅ Inbegrepen</td>
+        <td>✅ Inbegrepen</td>
+        <td>❓ Niet vermeld</td>
+        <td>❓ Vermoedelijk incl. (670≈675m²)</td>
+        <td>❌ Niet inbegrepen</td>
+      </tr>
+      <tr>
+        <td><strong>Korting</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>15% bij &gt;400m²</td>
+        <td>15% bij &gt;400m²</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Prijs/m²</strong></td>
+        <td>€17,50 excl.</td>
+        <td>€13-16 (vermoedelijk excl.)</td>
+        <td>€18,20–20,20 excl.</td>
+        <td>€14,52 incl. (wit)</td>
+        <td>~€19,20 excl.</td>
+        <td>~€25,40 excl.</td>
+        <td>€15,50 incl. (1× sauzen)</td>
+        <td>~€13 excl.</td>
+        <td>€8,75–8,78 excl. (sauzen)</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Totaal excl. BTW</strong></td>
+        <td>~€11.813</td>
+        <td>~€9.575</td>
+        <td>€12.717</td>
+        <td>~€8.900</td>
+        <td>€12.960</td>
+        <td>€17.145</td>
+        <td>~€8.648</td>
+        <td>€8.710</td>
+        <td>€5.349</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>Totaal incl. BTW</strong></td>
+        <td><strong style="color:#27ae60">~€14.289*</strong></td>
+        <td><strong style="color:#d35400">~€11.586*</strong></td>
+        <td>€15.388</td>
+        <td><strong style="color:#8e44ad">~€10.769*</strong></td>
+        <td>€15.681</td>
+        <td>€20.746</td>
+        <td><strong style="color:#e67e22">~€10.463*</strong></td>
+        <td><strong style="color:#27ae60">€10.539</strong></td>
+        <td style="color:#e74c3c">€5.830 (9% BTW!)</td>
+      </tr>
+      <tr>
+        <td><strong>BTW-tarief</strong></td>
+        <td>21% ✅</td>
+        <td>❓ Niet vermeld (geschat 21%)</td>
+        <td>21% ✅</td>
+        <td>21% ✅</td>
+        <td>21% ✅</td>
+        <td>21% ✅</td>
+        <td>incl.</td>
+        <td>21% ✅</td>
+        <td style="color:#e74c3c"><strong>9% ⚠️ FOUT</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Garantie</strong></td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+        <td>❓</td>
+      </tr>
+      <tr>
+        <td><strong>Geldigheid</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td style="color:#e74c3c"><strong>14 april!</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>t/m 1 juni 2026</td>
+      </tr>
+      <tr>
+        <td><strong>Offertedatum</strong></td>
+        <td>30 maart 2026</td>
+        <td>1 april 2026</td>
+        <td>30 maart 2026</td>
+        <td>1 april 2026</td>
+        <td>30 maart 2026</td>
+        <td>30 maart 2026</td>
+        <td>1 april 2026</td>
+        <td>2 april 2026</td>
+        <td>1 april 2026</td>
+      </tr>
+      <tr>
+        <td><strong>Planning</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Betaling</strong></td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>14 dagen na factuur</td>
+      </tr>
+      <tr>
+        <td><strong>Renovlies-optie</strong></td>
+        <td>✅ €32/m² (~€26.136)</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><strong>Vestiging</strong></td>
+        <td>Leiderdorp (lokaal)</td>
+        <td>Niet vermeld</td>
+        <td>Blaricum</td>
+        <td>Niet vermeld</td>
+        <td>Landelijk netwerk</td>
+        <td>Landelijk netwerk</td>
+        <td>Niet vermeld</td>
+        <td>Alphen a/d Rijn</td>
+        <td>Noordwijk</td>
+      </tr>
+      <tr>
+        <td><strong>Reviews</strong></td>
+        <td>Trustoo 8,9/10<br>Top 10 Leiden</td>
+        <td>Nog niet gevonden</td>
+        <td>Stukadoorgids 10/10 (2)<br>Site: zeer positief</td>
+        <td>Nog niet gevonden</td>
+        <td>Trustpilot 3,2/5 (1)</td>
+        <td>Trustpilot 3,2/5 (1)</td>
+        <td>Keurmerk Betere Schilder</td>
+        <td>KiyOh 98% aanbev.<br>Betere Schilder</td>
+        <td>Trustoo 9,1/10<br>Homedeal 8,3/10</td>
+      </tr>
+      <tr>
+        <td><strong>Ervaring</strong></td>
+        <td>25+ jaar, familiebedrijf</td>
+        <td>—</td>
+        <td>Sinds 2023 (~3 jr)</td>
+        <td>Klusbedrijf</td>
+        <td>Groot netwerk</td>
+        <td>Groot netwerk</td>
+        <td>—</td>
+        <td>25 jaar</td>
+        <td>Gevestigd bedrijf</td>
+      </tr>
+      <tr>
+        <td><strong>Contact</strong></td>
+        <td>schildersbedrijf-vanderblom.nl</td>
+        <td>0648663327</td>
+        <td>mnrschildersbedrijf.nl</td>
+        <td>dirk.schilderwerken@ziggo.nl</td>
+        <td>bouwsector.nl</td>
+        <td>bouwsector.nl</td>
+        <td>0653772351</td>
+        <td>06-53348356</td>
+        <td>schreuderschilderwerken.nl</td>
+      </tr>
+      <tr>
+        <td><strong>Score</strong></td>
+        <td style="color:#27ae60"><strong>7,5</strong></td>
+        <td style="color:#d35400"><strong>7,0</strong></td>
+        <td style="color:#2980b9"><strong>7,0</strong></td>
+        <td style="color:#8e44ad"><strong>6,5</strong></td>
+        <td style="color:#1abc9c"><strong>6,5</strong></td>
+        <td style="color:#8e44ad"><strong>6,5</strong></td>
+        <td style="color:#e67e22"><strong>6,0</strong></td>
+        <td style="color:#27ae60"><strong>7,5</strong></td>
+        <td style="color:#e74c3c"><strong>5,5</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- CONCLUSIE -->
+  <div class="notes" style="margin-top:20px">
+    <strong>Conclusie & Rangschikking (7 offertes):</strong><br><br>
+    🥇 <strong>Van der Blom — ~€14.289 incl. BTW</strong> (score 7,5) — Laagste m²-prijs (€17,50), Sigma materialen, familiebedrijf 25+ jaar, Trustoo 8,9/10. Lokaal (Leiderdorp). VOL-VCA gecertificeerd. Garage-prijs navragen.<br><br>
+    🥈 <strong>De Oude Ambacht — ~€11.586 incl. BTW</strong> (score 7,0) — Op papier goedkoopste latex-optie. Glidden Tex Matt, 4 lagen, schrobklasse 1. Machinaal schuren. Gedetailleerde werkwijze. Prijzen vermoedelijk excl. BTW — navragen.<br><br>
+    🥉 <strong>MnR Schildersbedrijf — €15.388 incl. BTW</strong> (score 7,0) — Sigma Perfect Matt, duidelijke m²-prijzen. Zeer goede klantreviews. Jong bedrijf (2023) maar professioneel. Let op: offerte verloopt 14 april!<br><br>
+    4. <strong>Verzaal Klusbedrijf — ~€10.769 incl. BTW</strong> (score 6,5) — Zeer scherp geprijsd. Trimetal Magnarol. Weinig details in offerte. Navragen: aantal lagen, garage, garantie.<br><br>
+    5. <strong>Bouwsector Nederland (rolwerk) — €15.681 incl. BTW</strong> (score 6,5) — Complete offerte incl. garage, Sigma, 15% korting. Maar: landelijk netwerk zonder lokale verankering, slechte Trustpilot-score (3,2/5). Spuitwerk-optie (€20.746) is 32% duurder.<br><br>
+    6. <strong>WSP Schilderwerken — ~€10.463 incl. BTW</strong> (score 6,0) — Let op: 1× sauzen, niet latex. Sigma. Keurmerk Betere Schilder. Niet vergelijkbaar met latex-offertes.<br><br>
+    7. <strong>Schreuder — €5.830 (9% BTW!)</strong> (score 5,5) — Niet vergelijkbaar: sauzen i.p.v. latex, garage ontbreekt, verkeerd BTW-tarief. Goede Trustoo-score (9,1) maar Radar-klachten over garantie.<br><br>
+    <strong>Advies:</strong> Nu meer opties beschikbaar. De Oude Ambacht en Verzaal zijn interessante budgetopties maar navragen nodig (BTW, garage, details). Van der Blom blijft beste combinatie prijs/kwaliteit/lokaal. MnR offerte verloopt 14 april. Wacht ook op Stolker, De Schilderscombinatie, Royal Schilder, Huysman, Alpha Paint voordat je definitief beslist.<br><br>
+    <strong>Actiepunten:</strong><br>
+    ⏰ MnR offerte verloopt 14 april<br>
+    📧 BTW navragen bij De Oude Ambacht (Stephan, 0648663327)<br>
+    📧 Garage-prijs navragen bij Van der Blom, MnR, De Oude Ambacht, Verzaal<br>
+    📞 Schilder-Concurrent (Thomas) — postcode sturen (06-38579118)
+  </div>
+
+  <!-- OFFERTE VERWACHT -->
+  <div class="section-title">Offerte verwacht</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">Stolker Schilderwerken</span>
+      <span class="info">John/Edwin · tekeningen ontvangen, werkt aan offerte</span>
+      <span class="badge badge-purple">Offerte in voorbereiding</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">De Schilderscombinatie</span>
+      <span class="info">Mike · 06-52695048 · offerte begin/mid volgende week</span>
+      <span class="badge badge-purple">Nieuw — offerte volgt</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">Royal Schilder</span>
+      <span class="info">Alireza · Alphen aan den Rijn · offerte binnen 2 dagen</span>
+      <span class="badge badge-purple">Nieuw — offerte volgt</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">Huysman Schilderwerken</span>
+      <span class="info">Niels Leenders · 0614479741 · plattegronden ontvangen, gaat ermee aan de slag</span>
+      <span class="badge badge-purple">Offerte in voorbereiding</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #8e44ad">
+      <span class="name">Van Kesteren Schilders</span>
+      <span class="info">Voorhout · familiebedrijf sinds 1935 · 90+ vakmensen · aanvraag verstuurd 2 april</span>
+      <span class="badge badge-purple">Aanvraag verstuurd</span>
+    </div>
+  </div>
+
+  <!-- ACTIE NODIG -->
+  <div class="section-title">Actie nodig</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card" style="border-left:3px solid #e67e22">
+      <span class="name">Schilder-Concurrent / Aannemer Gigant</span>
+      <span class="info">Thomas · 06-38579118 · Wacht op postcode + huisnummer</span>
+      <span class="badge badge-orange">Postcode sturen!</span>
+    </div>
+  </div>
+
+  <!-- NIET BESCHIKBAAR -->
+  <div class="section-title">Niet beschikbaar</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card" style="border-left:3px solid #e74c3c">
+      <span class="name">Jasper Taillie</span>
+      <span class="info">Vol · doorverwezen naar Sloos Schilderwerken</span>
+      <span class="badge badge-red">Volgeboekt</span>
+    </div>
+    <div class="status-card" style="border-left:3px solid #e74c3c">
+      <span class="name">Michiel de Schilder</span>
+      <span class="info">Volledig volgeboekt</span>
+      <span class="badge badge-red">Volgeboekt</span>
+    </div>
+  </div>
+
+  <!-- GEEN REACTIE -->
+  <div class="section-title">Geen reactie (31 maart 2026)</div>
+  <div style="display:grid;gap:10px">
+    <div class="status-card"><span class="name">Sloos Schilderwerken</span><span class="info">Doorverwezen door Jasper Taillie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Buijs Schilderwerken</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Van Leeuwen Schilders</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">De Leidsche Schilder</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Kluft Schilderwerken</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Rob van der Burg</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Van Noort Schilderwerken</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">ProCoat</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">Verbraeken Schilderwerken</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+    <div class="status-card"><span class="name">D. de Vos Schilderwerken</span><span class="info">Geen reactie</span><span class="badge badge-orange">Afwachten</span></div>
+  </div>
+
+  <div class="updated">Laatst bijgewerkt: 1 april 2026, 18:00</div>
+</div>
+</body>
+</html>

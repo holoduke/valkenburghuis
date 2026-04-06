@@ -1,9 +1,15 @@
+interface TodoLink {
+  label: string
+  url: string
+}
+
 interface Todo {
   id: string
   title: string
   category: string
   assignee: string
   notes: string
+  links: TodoLink[]
   completed: boolean
   createdAt: string
   order: number
@@ -40,7 +46,7 @@ export function useTodos() {
     await fetchTodos()
   }
 
-  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category' | 'notes'>>) {
+  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category' | 'notes' | 'links'>>) {
     await $fetch(`/api/todos/${id}`, { method: 'PATCH', body: data })
     await fetchTodos()
   }

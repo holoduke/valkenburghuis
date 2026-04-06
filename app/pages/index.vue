@@ -25,7 +25,7 @@ function handleUpdateAssignee(id: string, assignee: string) {
   updateTodo(id, { assignee })
 }
 
-function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string }) {
+function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string; links?: { label: string; url: string }[] }) {
   updateTodo(id, data)
 }
 </script>
