@@ -61,6 +61,8 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
         @reorder="reorderTodos"
       />
 
+      <PhotoSection />
+
       <DocumentSection />
     </main>
 
