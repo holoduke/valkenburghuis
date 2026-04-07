@@ -1,48 +1,102 @@
 <script setup lang="ts">
+interface Doc {
+  name: string
+  url: string
+  uploaded?: boolean
+}
+
 interface DocGroup {
+  id: string
   title: string
-  docs: { name: string; url: string }[]
+  docs: Doc[]
 }
 
 const groups = ref<DocGroup[]>([])
 const loading = ref(true)
+const uploading = ref<string | null>(null)
 
-onMounted(async () => {
+function classifyFile(file: string): string {
+  const lower = file.toLowerCase()
+  if (lower.includes('planning')) return 'planning'
+  if (lower.includes('schilder') || lower.includes('alphapaint') || lower.includes('gouwe') || lower.includes('mnr') || lower.includes('bouwsector')) return 'schilderwerk'
+  if (lower.includes('vloer') || lower.includes('giet') || lower.includes('floor') || lower.includes('hollandse') || lower.includes('vepox') || lower.includes('creafloors') || lower.includes('grijs') || lower.includes('smit') || lower.includes('nextlevel') || lower.includes('uniek')) return 'gietvloeren'
+  return 'overig'
+}
+
+function cleanName(file: string): string {
+  return file
+    .replace('.pdf', '')
+    .replace(/^[a-zA-Z0-9]{6}-/, '')
+    .replace(/-/g, ' ')
+}
+
+async function loadDocs() {
+  loading.value = true
   try {
-    const files = await $fetch<string[]>('/api/docs')
-    const schilders: { name: string; url: string }[] = []
-    const gietvloeren: { name: string; url: string }[] = []
-    const overig: { name: string; url: string }[] = []
+    const [staticFiles, uploadedFiles] = await Promise.all([
+      $fetch<string[]>('/api/docs'),
+      $fetch<{ filename: string; category: string; url: string }[]>('/api/uploads'),
+    ])
 
-    for (const file of files) {
-      const label = file.replace('.pdf', '').replace(/-/g, ' ').replace('Offerte ', '')
-      const entry = { name: label, url: `/docs/${file}` }
-
-      const lower = file.toLowerCase()
-      if (lower.includes('schilder') || lower.includes('alphapaint') || lower.includes('gouwe') || lower.includes('mnr') || lower.includes('bouwsector')) {
-        schilders.push(entry)
-      } else if (lower.includes('vloer') || lower.includes('giet') || lower.includes('floor') || lower.includes('hollandse') || lower.includes('vepox') || lower.includes('creafloors') || lower.includes('grijs') || lower.includes('smit') || lower.includes('nextlevel') || lower.includes('uniek')) {
-        gietvloeren.push(entry)
-      } else {
-        overig.push(entry)
-      }
+    const grouped: Record<string, Doc[]> = {
+      planning: [],
+      schilderwerk: [],
+      gietvloeren: [],
+      overig: [],
     }
 
-    const result: DocGroup[] = []
-    if (overig.length > 0 || files.includes('planning-aannemer.pdf')) {
-      result.push({
-        title: 'Planning',
-        docs: [{ name: 'Planning aannemer (Duijn Bouw)', url: '/docs/planning-aannemer.pdf' }],
+    for (const file of staticFiles) {
+      const cat = classifyFile(file)
+      grouped[cat].push({
+        name: cleanName(file),
+        url: `/docs/${file}`,
       })
     }
-    if (schilders.length > 0) result.push({ title: 'Offertes Schilderwerk', docs: schilders })
-    if (gietvloeren.length > 0) result.push({ title: 'Offertes Gietvloeren', docs: gietvloeren })
 
-    groups.value = result
+    for (const file of uploadedFiles) {
+      const cat = file.category in grouped ? file.category : 'overig'
+      grouped[cat].push({
+        name: cleanName(file.filename),
+        url: file.url,
+        uploaded: true,
+      })
+    }
+
+    const order: { id: string; title: string }[] = [
+      { id: 'planning', title: 'Planning' },
+      { id: 'schilderwerk', title: 'Offertes Schilderwerk' },
+      { id: 'gietvloeren', title: 'Offertes Gietvloeren' },
+      { id: 'overig', title: 'Overige documenten' },
+    ]
+
+    groups.value = order
+      .filter((g) => grouped[g.id].length > 0 || g.id === 'overig')
+      .map((g) => ({ ...g, docs: grouped[g.id] }))
   } finally {
     loading.value = false
   }
-})
+}
+
+async function handleUpload(categoryId: string, event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  uploading.value = categoryId
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('category', categoryId)
+
+    await $fetch('/api/upload', { method: 'POST', body: formData })
+    await loadDocs()
+  } finally {
+    uploading.value = null
+    input.value = ''
+  }
+}
+
+onMounted(() => loadDocs())
 </script>
 
 <template>
@@ -52,9 +106,24 @@ onMounted(async () => {
     <div v-if="loading" class="text-sm text-warm-400">Laden...</div>
 
     <div v-else class="space-y-4">
-      <div v-for="group in groups" :key="group.title" class="bg-white rounded-xl border border-warm-200 p-4">
-        <h3 class="text-sm font-semibold text-warm-700 mb-3">{{ group.title }}</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div v-for="group in groups" :key="group.id" class="bg-white rounded-xl border border-warm-200 p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-semibold text-warm-700">{{ group.title }}</h3>
+          <label
+            class="text-xs font-medium text-accent-500 hover:text-accent-600 cursor-pointer transition-colors"
+            :class="uploading === group.id ? 'opacity-50 pointer-events-none' : ''"
+          >
+            {{ uploading === group.id ? 'Uploaden...' : '+ Upload' }}
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.webp"
+              class="hidden"
+              @change="handleUpload(group.id, $event)"
+            />
+          </label>
+        </div>
+
+        <div v-if="group.docs.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <a
             v-for="doc in group.docs"
             :key="doc.url"
@@ -70,6 +139,7 @@ onMounted(async () => {
             </span>
           </a>
         </div>
+        <p v-else class="text-xs text-warm-400">Nog geen documenten.</p>
       </div>
     </div>
   </section>
