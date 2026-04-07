@@ -39,15 +39,10 @@ export function useTodos() {
     await fetchTodos()
   }
 
-  async function cycleStatus(id: string) {
-    const todo = todos.value.find((t) => t.id === id)
-    if (!todo) return
-    const current = todo.status || (todo.completed ? 'done' : 'todo')
-    const order: TodoStatus[] = ['todo', 'in_progress', 'done', 'blocked']
-    const next = order[(order.indexOf(current) + 1) % order.length]
+  async function setStatus(id: string, status: TodoStatus) {
     await $fetch(`/api/todos/${id}`, {
       method: 'PATCH',
-      body: { status: next, completed: next === 'done' },
+      body: { status, completed: status === 'done' },
     })
     await fetchTodos()
   }
@@ -70,5 +65,5 @@ export function useTodos() {
     todos.value = data
   }
 
-  return { todos, loading, completedCount, totalCount, fetchTodos, setTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos }
+  return { todos, loading, completedCount, totalCount, fetchTodos, setTodos, addTodo, setStatus, updateTodo, deleteTodo, reorderTodos }
 }

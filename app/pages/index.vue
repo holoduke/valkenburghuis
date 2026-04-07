@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { sortedEvents, progress: timelineProgress, fetchEvents, setEvents, addEvent, toggleEvent, updateEvent, deleteEvent } = useTimeline()
-const { todos, completedCount, totalCount, fetchTodos, setTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos } = useTodos()
+const { todos, completedCount, totalCount, fetchTodos, setTodos, addTodo, setStatus, updateTodo, deleteTodo, reorderTodos } = useTodos()
 const { costs, totalSpent, remaining, fetchCosts } = useCosts()
 
 const categories = ref<{ id: string; label: string; color: string }[]>([])
@@ -79,7 +79,7 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
       <TodoSection
         :todos="todos"
         :categories="categories"
-        @cycle-status="(id) => withPause(() => cycleStatus(id))"
+        @set-status="(id, s) => withPause(() => setStatus(id, s))"
         @delete="(id) => withPause(() => deleteTodo(id))"
         @add="(data) => withPause(() => addTodo(data))"
         @update-assignee="handleUpdateAssignee"

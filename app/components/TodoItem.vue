@@ -12,7 +12,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  cycleStatus: [id: string]
+  setStatus: [id: string, status: TodoStatus]
   delete: [id: string]
   edit: [id: string]
   updateAssignee: [id: string, assignee: string]
@@ -21,15 +21,24 @@ const emit = defineEmits<{
   drop: []
 }>()
 
-const STATUS_CONFIG: Record<TodoStatus, { label: string; color: string; bg: string; icon: string }> = {
-  todo: { label: 'Te doen', color: 'border-warm-300', bg: 'bg-white', icon: '' },
-  in_progress: { label: 'Bezig', color: 'border-blue-400', bg: 'bg-blue-400', icon: 'progress' },
-  done: { label: 'Klaar', color: 'border-success-500', bg: 'bg-success-500', icon: 'check' },
-  blocked: { label: 'Geblokkeerd', color: 'border-red-400', bg: 'bg-red-400', icon: 'blocked' },
+const showStatusPicker = ref(false)
+
+const STATUS_OPTIONS: { value: TodoStatus; label: string; color: string; bg: string }[] = [
+  { value: 'todo', label: 'Te doen', color: 'text-warm-500', bg: 'hover:bg-warm-50' },
+  { value: 'in_progress', label: 'Bezig', color: 'text-blue-600', bg: 'hover:bg-blue-50' },
+  { value: 'done', label: 'Klaar', color: 'text-green-600', bg: 'hover:bg-green-50' },
+  { value: 'blocked', label: 'Geblokkeerd', color: 'text-red-500', bg: 'hover:bg-red-50' },
+]
+
+const STATUS_ICON: Record<TodoStatus, { border: string; bg: string }> = {
+  todo: { border: 'border-warm-300', bg: '' },
+  in_progress: { border: 'border-blue-400', bg: 'bg-blue-400' },
+  done: { border: 'border-green-500', bg: 'bg-green-500' },
+  blocked: { border: 'border-red-400', bg: 'bg-red-400' },
 }
 
 const isDone = computed(() => props.status === 'done')
-const config = computed(() => STATUS_CONFIG[props.status] || STATUS_CONFIG.todo)
+const iconStyle = computed(() => STATUS_ICON[props.status] || STATUS_ICON.todo)
 
 const ASSIGNEES = ['', 'gillis', 'ilse'] as const
 
@@ -37,6 +46,11 @@ function cycleAssignee() {
   const currentIdx = ASSIGNEES.indexOf(props.assignee as typeof ASSIGNEES[number])
   const nextIdx = (currentIdx + 1) % ASSIGNEES.length
   emit('updateAssignee', props.id, ASSIGNEES[nextIdx])
+}
+
+function selectStatus(s: TodoStatus) {
+  showStatusPicker.value = false
+  if (s !== props.status) emit('setStatus', props.id, s)
 }
 
 function assigneeInitial(name: string): string {
@@ -65,6 +79,15 @@ function onDrop(e: DragEvent) {
   e.preventDefault()
   emit('drop')
 }
+
+// Close picker when clicking outside
+function onClickOutside(e: MouseEvent) {
+  const el = (e.target as HTMLElement).closest('.status-picker-wrapper')
+  if (!el) showStatusPicker.value = false
+}
+
+onMounted(() => document.addEventListener('click', onClickOutside, true))
+onUnmounted(() => document.removeEventListener('click', onClickOutside, true))
 </script>
 
 <template>
@@ -85,26 +108,61 @@ function onDrop(e: DragEvent) {
       </svg>
     </div>
 
-    <!-- Status button -->
-    <button
-      class="flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
-      :class="`${config.color} ${status !== 'todo' ? config.bg : 'hover:border-accent-500'}`"
-      :title="config.label"
-      @click="emit('cycleStatus', id)"
-    >
-      <!-- Check icon for done -->
-      <svg v-if="status === 'done'" class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-      </svg>
-      <!-- Arrow for in_progress -->
-      <svg v-else-if="status === 'in_progress'" class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-      </svg>
-      <!-- X for blocked -->
-      <svg v-else-if="status === 'blocked'" class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+    <!-- Status button with popover -->
+    <div class="relative status-picker-wrapper flex-shrink-0">
+      <button
+        class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all duration-200"
+        :class="`${iconStyle.border} ${status !== 'todo' ? iconStyle.bg : 'hover:border-accent-500'}`"
+        @click.stop="showStatusPicker = !showStatusPicker"
+      >
+        <svg v-if="status === 'done'" class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <svg v-else-if="status === 'in_progress'" class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+        <svg v-else-if="status === 'blocked'" class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636" />
+        </svg>
+      </button>
+
+      <!-- Status picker popover -->
+      <Transition name="fade">
+        <div
+          v-if="showStatusPicker"
+          class="absolute left-0 top-full mt-1 z-20 bg-white rounded-xl border border-warm-200 shadow-lg py-1 w-40"
+        >
+          <button
+            v-for="opt in STATUS_OPTIONS"
+            :key="opt.value"
+            class="w-full flex items-center gap-2.5 px-3 py-2 text-left text-sm transition-colors"
+            :class="[opt.bg, opt.color, props.status === opt.value ? 'font-semibold' : '']"
+            @click.stop="selectStatus(opt.value)"
+          >
+            <!-- Mini status icon -->
+            <span
+              class="w-3.5 h-3.5 rounded flex items-center justify-center border-2"
+              :class="STATUS_ICON[opt.value].border + ' ' + (opt.value !== 'todo' ? STATUS_ICON[opt.value].bg : '')"
+            >
+              <svg v-if="opt.value === 'done'" class="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <svg v-else-if="opt.value === 'in_progress'" class="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+              <svg v-else-if="opt.value === 'blocked'" class="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6" />
+              </svg>
+            </span>
+            {{ opt.label }}
+            <!-- Current indicator -->
+            <svg v-if="props.status === opt.value" class="w-3.5 h-3.5 ml-auto text-accent-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        </div>
+      </Transition>
+    </div>
 
     <!-- Title -->
     <button

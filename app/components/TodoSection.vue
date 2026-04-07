@@ -26,7 +26,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  cycleStatus: [id: string]
+  setStatus: [id: string, status: TodoStatus]
   delete: [id: string]
   add: [data: { title: string; category: string; assignee?: string }]
   update: [id: string, data: { title: string; category: string; assignee: string; notes: string; status: TodoStatus }]
@@ -222,7 +222,7 @@ function onDrop() {
         :has-links="(todo.links?.length ?? 0) > 0"
         :category-color="getCategoryColor(todo.category)"
         :category-label="getCategoryLabel(todo.category)"
-        @cycle-status="emit('cycleStatus', $event)"
+        @set-status="(id: string, s: TodoStatus) => emit('setStatus', id, s)"
         @delete="emit('delete', $event)"
         @edit="(id: string) => editingTodo = filteredTodos.find(t => t.id === id) || null"
         @update-assignee="emit('updateAssignee', $event[0] ?? $event, $event[1] ?? '')"
