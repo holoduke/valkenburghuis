@@ -59,6 +59,8 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
         @update="handleUpdateTodo"
         @reorder="reorderTodos"
       />
+
+      <DocumentSection />
     </main>
 
     <footer class="max-w-5xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-warm-400">

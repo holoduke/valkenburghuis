@@ -21,6 +21,7 @@ const showForm = ref(false)
 const newTitle = ref('')
 const newDate = ref('')
 const newDescription = ref('')
+const scrollContainer = ref<HTMLElement | null>(null)
 
 function handleAdd() {
   if (!newTitle.value.trim() || !newDate.value) return
@@ -39,6 +40,36 @@ function formatDate(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00')
   return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
 }
+
+const closestIndex = computed(() => {
+  const today = new Date().toISOString().slice(0, 10)
+  let minDiff = Infinity
+  let idx = 0
+  for (let i = 0; i < props.events.length; i++) {
+    const diff = Math.abs(new Date(props.events[i].date).getTime() - new Date(today).getTime())
+    if (diff < minDiff) {
+      minDiff = diff
+      idx = i
+    }
+  }
+  return idx
+})
+
+function scrollToClosest() {
+  const container = scrollContainer.value
+  if (!container || props.events.length === 0) return
+  const itemWidth = 180
+  const scrollTarget = (closestIndex.value * itemWidth) - (container.clientWidth / 2) + (itemWidth / 2)
+  container.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' })
+}
+
+watch(() => props.events.length, () => {
+  nextTick(() => scrollToClosest())
+})
+
+onMounted(() => {
+  nextTick(() => scrollToClosest())
+})
 </script>
 
 <template>
@@ -91,6 +122,7 @@ function formatDate(dateStr: string): string {
     <!-- Timeline -->
     <div
       v-if="props.events.length > 0"
+      ref="scrollContainer"
       class="timeline-scroll overflow-x-auto pb-4"
     >
       <div class="relative flex items-start min-w-max px-2">
@@ -106,9 +138,13 @@ function formatDate(dateStr: string): string {
           <!-- Dot -->
           <button
             class="relative z-1 w-7 h-7 rounded-full border-[2.5px] flex items-center justify-center transition-all duration-300 cursor-pointer"
-            :class="event.completed
-              ? 'bg-success-500 border-success-500 shadow-sm shadow-success-500/30'
-              : 'bg-white border-warm-300 hover:border-accent-500'"
+            :class="[
+              event.completed
+                ? 'bg-success-500 border-success-500 shadow-sm shadow-success-500/30'
+                : i === closestIndex
+                  ? 'bg-accent-500 border-accent-500 shadow-sm shadow-accent-500/30'
+                  : 'bg-white border-warm-300 hover:border-accent-500',
+            ]"
             @click="emit('toggle', event.id)"
           >
             <svg
@@ -121,17 +157,25 @@ function formatDate(dateStr: string): string {
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
+            <div
+              v-else-if="i === closestIndex"
+              class="w-2 h-2 bg-white rounded-full"
+            />
           </button>
 
           <!-- Content -->
           <div class="mt-3 text-center px-2">
             <p
               class="text-sm font-medium leading-tight transition-colors"
-              :class="event.completed ? 'text-success-600' : 'text-warm-800'"
+              :class="[
+                event.completed ? 'text-success-600' : i === closestIndex ? 'text-accent-600 font-semibold' : 'text-warm-800',
+              ]"
             >
               {{ event.title }}
             </p>
-            <p class="text-xs text-warm-400 mt-1">{{ formatDate(event.date) }}</p>
+            <p class="text-xs mt-1" :class="i === closestIndex ? 'text-accent-500' : 'text-warm-400'">
+              {{ formatDate(event.date) }}
+            </p>
             <p v-if="event.description" class="text-xs text-warm-400 mt-0.5">
               {{ event.description }}
             </p>
