@@ -21,7 +21,6 @@ const showForm = ref(false)
 const newTitle = ref('')
 const newDate = ref('')
 const newDescription = ref('')
-const scrollContainer = ref<HTMLElement | null>(null)
 
 function handleAdd() {
   if (!newTitle.value.trim() || !newDate.value) return
@@ -38,38 +37,27 @@ function handleAdd() {
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr + 'T00:00:00')
-  return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' })
+  return date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })
 }
 
-const closestIndex = computed(() => {
-  const today = new Date().toISOString().slice(0, 10)
+const today = new Date().toISOString().slice(0, 10)
+
+function isPast(dateStr: string): boolean {
+  return dateStr < today
+}
+
+function isClosest(i: number): boolean {
   let minDiff = Infinity
   let idx = 0
-  for (let i = 0; i < props.events.length; i++) {
-    const diff = Math.abs(new Date(props.events[i].date).getTime() - new Date(today).getTime())
+  for (let j = 0; j < props.events.length; j++) {
+    const diff = Math.abs(new Date(props.events[j].date).getTime() - new Date(today).getTime())
     if (diff < minDiff) {
       minDiff = diff
-      idx = i
+      idx = j
     }
   }
-  return idx
-})
-
-function scrollToClosest() {
-  const container = scrollContainer.value
-  if (!container || props.events.length === 0) return
-  const itemWidth = 180
-  const scrollTarget = (closestIndex.value * itemWidth) - (container.clientWidth / 2) + (itemWidth / 2)
-  container.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' })
+  return i === idx
 }
-
-watch(() => props.events.length, () => {
-  nextTick(() => scrollToClosest())
-})
-
-onMounted(() => {
-  nextTick(() => scrollToClosest())
-})
 </script>
 
 <template>
@@ -119,76 +107,75 @@ onMounted(() => {
       </form>
     </Transition>
 
-    <!-- Timeline -->
-    <div
-      v-if="props.events.length > 0"
-      ref="scrollContainer"
-      class="timeline-scroll overflow-x-auto pb-4"
-    >
-      <div class="relative flex items-start min-w-max px-2">
-        <!-- Connecting line -->
-        <div class="absolute top-[14px] left-[90px] right-[90px] h-[2px] bg-warm-200" />
-
-        <div
-          v-for="(event, i) in props.events"
-          :key="event.id"
-          class="relative flex flex-col items-center group"
-          :style="{ width: '180px' }"
+    <!-- Timeline list -->
+    <div v-if="props.events.length > 0" class="bg-white rounded-xl border border-warm-200 divide-y divide-warm-100">
+      <div
+        v-for="(event, i) in props.events"
+        :key="event.id"
+        class="group flex items-center gap-3 px-4 py-3 transition-all"
+        :class="isClosest(i) ? 'bg-accent-500/5' : 'hover:bg-warm-50/80'"
+      >
+        <!-- Checkbox -->
+        <button
+          class="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200"
+          :class="event.completed
+            ? 'bg-success-500 border-success-500'
+            : isClosest(i)
+              ? 'border-accent-500'
+              : 'border-warm-300 hover:border-accent-500'"
+          @click="emit('toggle', event.id)"
         >
-          <!-- Dot -->
-          <button
-            class="relative z-1 w-7 h-7 rounded-full border-[2.5px] flex items-center justify-center transition-all duration-300 cursor-pointer"
-            :class="[
-              event.completed
-                ? 'bg-success-500 border-success-500 shadow-sm shadow-success-500/30'
-                : i === closestIndex
-                  ? 'bg-accent-500 border-accent-500 shadow-sm shadow-accent-500/30'
-                  : 'bg-white border-warm-300 hover:border-accent-500',
-            ]"
-            @click="emit('toggle', event.id)"
+          <svg
+            v-if="event.completed"
+            class="w-3 h-3 text-white check-bounce"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="3"
           >
-            <svg
-              v-if="event.completed"
-              class="w-3.5 h-3.5 text-white check-bounce"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="3"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-            <div
-              v-else-if="i === closestIndex"
-              class="w-2 h-2 bg-white rounded-full"
-            />
-          </button>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <div v-else-if="isClosest(i)" class="w-1.5 h-1.5 bg-accent-500 rounded-full" />
+        </button>
 
-          <!-- Content -->
-          <div class="mt-3 text-center px-2">
-            <p
-              class="text-sm font-medium leading-tight transition-colors"
-              :class="[
-                event.completed ? 'text-success-600' : i === closestIndex ? 'text-accent-600 font-semibold' : 'text-warm-800',
-              ]"
-            >
-              {{ event.title }}
-            </p>
-            <p class="text-xs mt-1" :class="i === closestIndex ? 'text-accent-500' : 'text-warm-400'">
-              {{ formatDate(event.date) }}
-            </p>
-            <p v-if="event.description" class="text-xs text-warm-400 mt-0.5">
-              {{ event.description }}
-            </p>
-          </div>
+        <!-- Date -->
+        <span
+          class="flex-shrink-0 w-16 text-xs font-medium"
+          :class="event.completed ? 'text-warm-400' : isClosest(i) ? 'text-accent-600' : isPast(event.date) ? 'text-warm-400' : 'text-warm-500'"
+        >
+          {{ formatDate(event.date) }}
+        </span>
 
-          <!-- Delete button -->
-          <button
-            class="mt-2 opacity-0 group-hover:opacity-100 text-xs text-warm-400 hover:text-red-500 transition-all"
-            @click="emit('delete', event.id)"
+        <!-- Title & description -->
+        <div class="flex-1 min-w-0">
+          <p
+            class="text-sm font-medium truncate"
+            :class="event.completed ? 'line-through text-warm-400' : isClosest(i) ? 'text-accent-700' : 'text-warm-800'"
           >
-            verwijder
-          </button>
+            {{ event.title }}
+          </p>
+          <p v-if="event.description" class="text-xs text-warm-400 truncate">
+            {{ event.description }}
+          </p>
         </div>
+
+        <!-- Now indicator -->
+        <span
+          v-if="isClosest(i) && !event.completed"
+          class="flex-shrink-0 text-[10px] font-semibold uppercase tracking-wider text-accent-500 bg-accent-500/10 px-2 py-0.5 rounded-full"
+        >
+          nu
+        </span>
+
+        <!-- Delete -->
+        <button
+          class="flex-shrink-0 opacity-0 group-hover:opacity-100 text-warm-300 hover:text-red-500 transition-all"
+          @click="emit('delete', event.id)"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
     </div>
 
