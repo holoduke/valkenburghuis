@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, deleteEvent } = useTimeline()
+const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, updateEvent, deleteEvent } = useTimeline()
 const { todos, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, updateTodo, deleteTodo, reorderTodos } = useTodos()
 const { costs, totalSpent, remaining, fetchCosts } = useCosts()
 
@@ -40,6 +40,7 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
         @toggle="toggleEvent"
         @delete="deleteEvent"
         @add="addEvent"
+        @update="updateEvent"
       />
 
       <CostOverview

@@ -44,10 +44,15 @@ export function useTimeline() {
     await fetchEvents()
   }
 
+  async function updateEvent(id: string, data: { title: string; date: string; description: string }) {
+    await $fetch(`/api/timeline/${id}`, { method: 'PATCH', body: data })
+    await fetchEvents()
+  }
+
   async function deleteEvent(id: string) {
     await $fetch(`/api/timeline/${id}`, { method: 'DELETE' })
     await fetchEvents()
   }
 
-  return { events, sortedEvents, loading, progress, fetchEvents, addEvent, toggleEvent, deleteEvent }
+  return { events, sortedEvents, loading, progress, fetchEvents, addEvent, toggleEvent, updateEvent, deleteEvent }
 }

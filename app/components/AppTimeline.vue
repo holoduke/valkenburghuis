@@ -15,6 +15,7 @@ const emit = defineEmits<{
   toggle: [id: string]
   delete: [id: string]
   add: [data: { date: string; title: string; description?: string }]
+  update: [id: string, data: { title: string; date: string; description: string }]
 }>()
 
 const showForm = ref(false)
@@ -22,6 +23,7 @@ const newTitle = ref('')
 const newDate = ref('')
 const newDescription = ref('')
 const scrollContainer = ref<HTMLElement | null>(null)
+const editingEvent = ref<TimelineEvent | null>(null)
 
 function handleAdd() {
   if (!newTitle.value.trim() || !newDate.value) return
@@ -61,6 +63,23 @@ function scrollToClosest() {
   const itemWidth = 180
   const scrollTarget = (closestIndex.value * itemWidth) - (container.clientWidth / 2) + (itemWidth / 2)
   container.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' })
+}
+
+function handleEditSave(data: { title: string; date: string; description: string }) {
+  if (editingEvent.value) {
+    emit('update', editingEvent.value.id, data)
+    editingEvent.value = null
+  }
+}
+
+function handleEditToggle(id: string) {
+  emit('toggle', id)
+  editingEvent.value = null
+}
+
+function handleEditDelete(id: string) {
+  emit('delete', id)
+  editingEvent.value = null
 }
 
 watch(() => props.events.length, () => {
@@ -145,7 +164,7 @@ onMounted(() => {
                   ? 'bg-accent-500 border-accent-500 shadow-sm shadow-accent-500/30'
                   : 'bg-white border-warm-300 hover:border-accent-500',
             ]"
-            @click="emit('toggle', event.id)"
+            @click="editingEvent = event"
           >
             <svg
               v-if="event.completed"
@@ -164,7 +183,7 @@ onMounted(() => {
           </button>
 
           <!-- Content -->
-          <div class="mt-3 text-center px-2">
+          <div class="mt-3 text-center px-2 cursor-pointer" @click="editingEvent = event">
             <p
               class="text-sm font-medium leading-tight transition-colors"
               :class="[
@@ -180,14 +199,6 @@ onMounted(() => {
               {{ event.description }}
             </p>
           </div>
-
-          <!-- Delete button -->
-          <button
-            class="mt-2 opacity-0 group-hover:opacity-100 text-xs text-warm-400 hover:text-red-500 transition-all"
-            @click="emit('delete', event.id)"
-          >
-            verwijder
-          </button>
         </div>
       </div>
     </div>
@@ -195,5 +206,15 @@ onMounted(() => {
     <div v-else class="text-center py-8 text-warm-400 text-sm">
       Nog geen mijlpalen. Voeg er een toe om te beginnen.
     </div>
+
+    <!-- Edit modal -->
+    <TimelineEditModal
+      v-if="editingEvent"
+      :event="editingEvent"
+      @close="editingEvent = null"
+      @save="handleEditSave"
+      @toggle="handleEditToggle"
+      @delete="handleEditDelete"
+    />
   </section>
 </template>
