@@ -42,7 +42,7 @@ onUnmounted(() => document.removeEventListener('keydown', handleKeydown))
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="fixed inset-0 bg-black/40" @click="emit('close')" />
-    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
+    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-5 sm:p-6 space-y-4">
       <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold text-warm-800">Mijlpaal bewerken</h3>
         <button class="text-warm-400 hover:text-warm-600" @click="emit('close')">

@@ -23,28 +23,41 @@
   --color-success-600: #16a34a;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background-color: var(--color-warm-50);
   color: var(--color-warm-900);
+  padding-bottom: env(safe-area-inset-bottom);
+  overscroll-behavior-y: contain;
+}
+
+/* Touch-friendly: minimum target size */
+button, a, select, [role="button"] {
+  min-height: 32px;
 }
 
 /* Custom scrollbar for timeline */
+.timeline-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
 .timeline-scroll::-webkit-scrollbar {
-  height: 6px;
+  height: 4px;
 }
 
 .timeline-scroll::-webkit-scrollbar-track {
   background: var(--color-warm-100);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .timeline-scroll::-webkit-scrollbar-thumb {
   background: var(--color-warm-300);
-  border-radius: 3px;
-}
-
-.timeline-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--color-warm-400);
+  border-radius: 2px;
 }
 
 /* Smooth transitions */
@@ -67,4 +80,14 @@ body {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
   100% { transform: scale(1); }
+}
+
+/* Hide number input spinners for cleaner cost inputs */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
 }

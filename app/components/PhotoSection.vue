@@ -177,7 +177,7 @@ onUnmounted(() => {
 
           <div
             v-if="photosByCategory[cat]?.length"
-            class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2"
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2"
           >
             <button
               v-for="photo in photosByCategory[cat]"

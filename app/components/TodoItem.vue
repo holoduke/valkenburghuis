@@ -76,8 +76,8 @@ function onDrop(e: DragEvent) {
     @dragover="onDragOver"
     @drop="onDrop"
   >
-    <!-- Drag handle -->
-    <div class="flex-shrink-0 text-warm-300 opacity-0 group-hover:opacity-100 transition-opacity">
+    <!-- Drag handle (desktop only) -->
+    <div class="hidden sm:block flex-shrink-0 text-warm-300 opacity-0 group-hover:opacity-100 transition-opacity">
       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
         <circle cx="9" cy="12" r="1.5" /><circle cx="15" cy="12" r="1.5" />
@@ -147,22 +147,17 @@ function onDrop(e: DragEvent) {
       {{ assignee ? assigneeInitial(assignee) : '?' }}
     </button>
 
-    <!-- Category badge -->
+    <!-- Category dot (mobile) / badge (desktop) -->
+    <span
+      class="sm:hidden flex-shrink-0 w-2.5 h-2.5 rounded-full"
+      :style="{ backgroundColor: categoryColor }"
+      :title="categoryLabel"
+    />
     <span
       class="hidden sm:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full text-white"
       :style="{ backgroundColor: categoryColor }"
     >
       {{ categoryLabel }}
     </span>
-
-    <!-- Delete -->
-    <button
-      class="flex-shrink-0 opacity-0 group-hover:opacity-100 text-warm-300 hover:text-red-500 transition-all"
-      @click="emit('delete', id)"
-    >
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
   </div>
 </template>

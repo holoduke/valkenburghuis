@@ -88,7 +88,7 @@ onUnmounted(() => {
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center p-4" @click.self="emit('close')">
     <div class="fixed inset-0 bg-black/40" @click="emit('close')" />
-    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+    <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-lg p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold text-warm-800">Taak bewerken</h3>
         <button class="text-warm-400 hover:text-warm-600" @click="emit('close')">

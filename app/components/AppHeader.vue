@@ -26,26 +26,24 @@ async function handleLogout() {
           <p class="text-xs text-warm-500">Oplevering Tracker</p>
         </div>
       </div>
-      <div class="flex items-center gap-4 text-sm">
-        <div class="hidden sm:flex items-center gap-2">
-          <span class="text-warm-500">Tijdlijn</span>
-          <div class="w-20 h-1.5 bg-warm-200 rounded-full overflow-hidden">
+      <div class="flex items-center gap-3 sm:gap-4 text-sm">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="w-14 sm:w-20 h-1.5 bg-warm-200 rounded-full overflow-hidden" title="Tijdlijn">
             <div
               class="h-full bg-accent-500 rounded-full transition-all duration-500"
               :style="{ width: `${timelineProgress}%` }"
             />
           </div>
-          <span class="text-warm-700 font-medium">{{ timelineProgress }}%</span>
+          <span class="text-warm-700 font-medium text-xs sm:text-sm">{{ timelineProgress }}%</span>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-warm-500 hidden sm:inline">Taken</span>
-          <div class="w-20 h-1.5 bg-warm-200 rounded-full overflow-hidden">
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="w-14 sm:w-20 h-1.5 bg-warm-200 rounded-full overflow-hidden" title="Taken">
             <div
               class="h-full bg-success-500 rounded-full transition-all duration-500"
               :style="{ width: `${todoProgress}%` }"
             />
           </div>
-          <span class="text-warm-700 font-medium">{{ todoProgress }}%</span>
+          <span class="text-warm-700 font-medium text-xs sm:text-sm">{{ todoProgress }}%</span>
         </div>
         <button
           class="text-warm-400 hover:text-warm-600 transition-colors"

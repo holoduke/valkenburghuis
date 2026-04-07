@@ -60,7 +60,7 @@ const closestIndex = computed(() => {
 function scrollToClosest() {
   const container = scrollContainer.value
   if (!container || props.events.length === 0) return
-  const itemWidth = 180
+  const itemWidth = 140
   const scrollTarget = (closestIndex.value * itemWidth) - (container.clientWidth / 2) + (itemWidth / 2)
   container.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' })
 }
@@ -146,13 +146,13 @@ onMounted(() => {
     >
       <div class="relative flex items-start min-w-max px-2">
         <!-- Connecting line -->
-        <div class="absolute top-[14px] left-[90px] right-[90px] h-[2px] bg-warm-200" />
+        <div class="absolute top-[14px] left-[70px] right-[70px] h-[2px] bg-warm-200" />
 
         <div
           v-for="(event, i) in props.events"
           :key="event.id"
           class="relative flex flex-col items-center group"
-          :style="{ width: '180px' }"
+          :style="{ width: '140px' }"
         >
           <!-- Dot -->
           <button

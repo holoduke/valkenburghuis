@@ -145,7 +145,7 @@ function formatCurrency(value: number): string {
     </div>
 
     <!-- Cost items grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3">
       <div
         v-for="(item, i) in props.costs.items"
         :key="item.id"
@@ -153,7 +153,7 @@ function formatCurrency(value: number): string {
       >
         <!-- Delete button -->
         <button
-          class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-warm-300 hover:text-red-500 transition-all"
+          class="absolute top-2 right-2 sm:opacity-0 sm:group-hover:opacity-100 text-warm-300 hover:text-red-500 transition-all"
           @click="removeItem(i)"
         >
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
