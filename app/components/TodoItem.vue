@@ -217,5 +217,7 @@ onUnmounted(() => document.removeEventListener('click', onClickOutside, true))
     >
       {{ categoryLabel }}
     </span>
+
+    <!-- Delete (via edit modal) -->
   </div>
 </template>
