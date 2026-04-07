@@ -54,5 +54,9 @@ export function useTimeline() {
     await fetchEvents()
   }
 
-  return { events, sortedEvents, loading, progress, fetchEvents, addEvent, toggleEvent, updateEvent, deleteEvent }
+  function setEvents(data: TimelineEvent[]) {
+    events.value = data
+  }
+
+  return { events, sortedEvents, loading, progress, fetchEvents, setEvents, addEvent, toggleEvent, updateEvent, deleteEvent }
 }

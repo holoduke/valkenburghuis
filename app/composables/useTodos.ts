@@ -66,5 +66,9 @@ export function useTodos() {
     todos.value = await $fetch<Todo[]>('/api/todos/reorder', { method: 'POST', body: { ids } })
   }
 
-  return { todos, loading, completedCount, totalCount, fetchTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos }
+  function setTodos(data: Todo[]) {
+    todos.value = data
+  }
+
+  return { todos, loading, completedCount, totalCount, fetchTodos, setTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos }
 }

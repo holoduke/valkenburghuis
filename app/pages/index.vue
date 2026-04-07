@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, updateEvent, deleteEvent } = useTimeline()
-const { todos, completedCount, totalCount, fetchTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos } = useTodos()
+const { sortedEvents, progress: timelineProgress, fetchEvents, setEvents, addEvent, toggleEvent, updateEvent, deleteEvent } = useTimeline()
+const { todos, completedCount, totalCount, fetchTodos, setTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos } = useTodos()
 const { costs, totalSpent, remaining, fetchCosts } = useCosts()
 
 const categories = ref<{ id: string; label: string; color: string }[]>([])
@@ -9,6 +9,26 @@ const todoProgress = computed(() => {
   if (totalCount.value === 0) return 0
   return Math.round((completedCount.value / totalCount.value) * 100)
 })
+
+// Smart sync: poll every 10s, only update if hash changed
+const sync = useSync((data) => {
+  setTodos(data.todos)
+  setEvents(data.timeline)
+  costs.value = data.costs
+}, 10000)
+
+// Wrap mutating actions: pause sync during writes to prevent flicker
+async function withPause<T>(fn: () => Promise<T>): Promise<T> {
+  sync.pause()
+  try {
+    const result = await fn()
+    // After our write, poll once to get new hash so next poll won't re-apply stale data
+    await sync.poll()
+    return result
+  } finally {
+    sync.resume()
+  }
+}
 
 onMounted(async () => {
   await Promise.all([
@@ -19,14 +39,20 @@ onMounted(async () => {
       categories.value = data
     }),
   ])
+  // Start sync after initial load, set hash so first poll doesn't duplicate
+  sync.start()
+})
+
+onUnmounted(() => {
+  sync.stop()
 })
 
 function handleUpdateAssignee(id: string, assignee: string) {
-  updateTodo(id, { assignee })
+  withPause(() => updateTodo(id, { assignee }))
 }
 
 function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string; status?: string; links?: { label: string; url: string }[] }) {
-  updateTodo(id, data)
+  withPause(() => updateTodo(id, data))
 }
 </script>
 
@@ -37,10 +63,10 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
     <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-2">
       <AppTimeline
         :events="sortedEvents"
-        @toggle="toggleEvent"
-        @delete="deleteEvent"
-        @add="addEvent"
-        @update="updateEvent"
+        @toggle="(id) => withPause(() => toggleEvent(id))"
+        @delete="(id) => withPause(() => deleteEvent(id))"
+        @add="(data) => withPause(() => addEvent(data))"
+        @update="(id, data) => withPause(() => updateEvent(id, data))"
       />
 
       <CostOverview
@@ -53,12 +79,12 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
       <TodoSection
         :todos="todos"
         :categories="categories"
-        @cycle-status="cycleStatus"
-        @delete="deleteTodo"
-        @add="addTodo"
+        @cycle-status="(id) => withPause(() => cycleStatus(id))"
+        @delete="(id) => withPause(() => deleteTodo(id))"
+        @add="(data) => withPause(() => addTodo(data))"
         @update-assignee="handleUpdateAssignee"
         @update="handleUpdateTodo"
-        @reorder="reorderTodos"
+        @reorder="(ids) => withPause(() => reorderTodos(ids))"
       />
 
       <PhotoSection />
