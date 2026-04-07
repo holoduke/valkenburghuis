@@ -3,6 +3,8 @@ export interface TodoLink {
   url: string
 }
 
+export type TodoStatus = 'todo' | 'in_progress' | 'done' | 'blocked'
+
 export interface Todo {
   id: string
   title: string
@@ -10,6 +12,7 @@ export interface Todo {
   assignee: string
   notes: string
   links: TodoLink[]
+  status: TodoStatus
   completed: boolean
   createdAt: string
   order: number

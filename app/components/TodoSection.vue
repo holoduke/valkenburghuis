@@ -1,4 +1,6 @@
 <script setup lang="ts">
+type TodoStatus = 'todo' | 'in_progress' | 'done' | 'blocked'
+
 interface Todo {
   id: string
   title: string
@@ -6,6 +8,7 @@ interface Todo {
   assignee: string
   notes: string
   links: { label: string; url: string }[]
+  status: TodoStatus
   completed: boolean
   createdAt: string
   order: number
@@ -23,10 +26,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  toggle: [id: string]
+  cycleStatus: [id: string]
   delete: [id: string]
   add: [data: { title: string; category: string; assignee?: string }]
-  update: [id: string, data: { title: string; category: string; assignee: string; notes: string }]
+  update: [id: string, data: { title: string; category: string; assignee: string; notes: string; status: TodoStatus }]
   updateAssignee: [id: string, assignee: string]
   reorder: [ids: string[]]
 }>()
@@ -40,9 +43,17 @@ const dragFromId = ref<string | null>(null)
 const dragOverId = ref<string | null>(null)
 const editingTodo = ref<Todo | null>(null)
 
+function getStatus(t: Todo): TodoStatus {
+  return t.status || (t.completed ? 'done' : 'todo')
+}
+
+const STATUS_ORDER: Record<TodoStatus, number> = { in_progress: 0, todo: 1, blocked: 2, done: 3 }
+
 const filteredTodos = computed(() => {
   const sorted = [...props.todos].sort((a, b) => {
-    if (a.completed !== b.completed) return a.completed ? 1 : -1
+    const sa = STATUS_ORDER[getStatus(a)]
+    const sb = STATUS_ORDER[getStatus(b)]
+    if (sa !== sb) return sa - sb
     return (a.order ?? 0) - (b.order ?? 0)
   })
   if (activeFilter.value === 'alle') return sorted
@@ -85,8 +96,8 @@ function onDrop() {
     return
   }
 
-  const uncompleted = filteredTodos.value.filter((t) => !t.completed)
-  const ids = uncompleted.map((t) => t.id)
+  const active = filteredTodos.value.filter((t) => getStatus(t) !== 'done')
+  const ids = active.map((t) => t.id)
   const fromIdx = ids.indexOf(dragFromId.value)
   const toIdx = ids.indexOf(dragOverId.value)
 
@@ -95,10 +106,10 @@ function onDrop() {
   ids.splice(fromIdx, 1)
   ids.splice(toIdx, 0, dragFromId.value)
 
-  const completedIds = filteredTodos.value.filter((t) => t.completed).map((t) => t.id)
+  const doneIds = filteredTodos.value.filter((t) => getStatus(t) === 'done').map((t) => t.id)
 
   if (activeFilter.value === 'alle') {
-    emit('reorder', [...ids, ...completedIds])
+    emit('reorder', [...ids, ...doneIds])
   } else {
     // When filtered, preserve order of items not in view
     const allSorted = [...props.todos].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -107,7 +118,7 @@ function onDrop() {
     const filteredIds = [...ids, ...completedIds]
     const otherIds = reordered.filter((id) => !filteredIds.includes(id))
     // Interleave: put filtered items back in their relative positions
-    emit('reorder', [...ids, ...completedIds, ...otherIds])
+    emit('reorder', [...ids, ...doneIds, ...otherIds])
   }
 
   dragFromId.value = null
@@ -121,7 +132,7 @@ function onDrop() {
       <h2 class="text-lg font-semibold text-warm-800">
         Taken
         <span class="text-sm font-normal text-warm-400 ml-2">
-          {{ props.todos.filter((t) => t.completed).length }}/{{ props.todos.length }}
+          {{ props.todos.filter((t) => getStatus(t) === 'done').length }}/{{ props.todos.length }}
         </span>
       </h2>
       <button
@@ -206,12 +217,12 @@ function onDrop() {
         :key="todo.id"
         :id="todo.id"
         :title="todo.title"
-        :completed="todo.completed"
+        :status="getStatus(todo)"
         :assignee="todo.assignee || ''"
         :has-links="(todo.links?.length ?? 0) > 0"
         :category-color="getCategoryColor(todo.category)"
         :category-label="getCategoryLabel(todo.category)"
-        @toggle="emit('toggle', $event)"
+        @cycle-status="emit('cycleStatus', $event)"
         @delete="emit('delete', $event)"
         @edit="(id: string) => editingTodo = filteredTodos.find(t => t.id === id) || null"
         @update-assignee="emit('updateAssignee', $event[0] ?? $event, $event[1] ?? '')"

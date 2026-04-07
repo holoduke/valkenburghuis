@@ -3,6 +3,8 @@ interface TodoLink {
   url: string
 }
 
+type TodoStatus = 'todo' | 'in_progress' | 'done' | 'blocked'
+
 interface Todo {
   id: string
   title: string
@@ -10,6 +12,7 @@ interface Todo {
   assignee: string
   notes: string
   links: TodoLink[]
+  status: TodoStatus
   completed: boolean
   createdAt: string
   order: number
@@ -19,7 +22,7 @@ export function useTodos() {
   const todos = ref<Todo[]>([])
   const loading = ref(false)
 
-  const completedCount = computed(() => todos.value.filter((t) => t.completed).length)
+  const completedCount = computed(() => todos.value.filter((t) => (t.status || (t.completed ? 'done' : 'todo')) === 'done').length)
   const totalCount = computed(() => todos.value.length)
 
   async function fetchTodos() {
@@ -36,17 +39,20 @@ export function useTodos() {
     await fetchTodos()
   }
 
-  async function toggleTodo(id: string) {
+  async function cycleStatus(id: string) {
     const todo = todos.value.find((t) => t.id === id)
     if (!todo) return
+    const current = todo.status || (todo.completed ? 'done' : 'todo')
+    const order: TodoStatus[] = ['todo', 'in_progress', 'done', 'blocked']
+    const next = order[(order.indexOf(current) + 1) % order.length]
     await $fetch(`/api/todos/${id}`, {
       method: 'PATCH',
-      body: { completed: !todo.completed },
+      body: { status: next, completed: next === 'done' },
     })
     await fetchTodos()
   }
 
-  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category' | 'notes' | 'links'>>) {
+  async function updateTodo(id: string, data: Partial<Pick<Todo, 'assignee' | 'title' | 'category' | 'notes' | 'links' | 'status'>>) {
     await $fetch(`/api/todos/${id}`, { method: 'PATCH', body: data })
     await fetchTodos()
   }
@@ -60,5 +66,5 @@ export function useTodos() {
     todos.value = await $fetch<Todo[]>('/api/todos/reorder', { method: 'POST', body: { ids } })
   }
 
-  return { todos, loading, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, updateTodo, deleteTodo, reorderTodos }
+  return { todos, loading, completedCount, totalCount, fetchTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos }
 }

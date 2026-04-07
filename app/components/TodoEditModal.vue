@@ -4,6 +4,8 @@ interface TodoLink {
   url: string
 }
 
+type TodoStatus = 'todo' | 'in_progress' | 'done' | 'blocked'
+
 interface Todo {
   id: string
   title: string
@@ -11,6 +13,7 @@ interface Todo {
   assignee: string
   notes: string
   links: TodoLink[]
+  status: TodoStatus
   completed: boolean
 }
 
@@ -27,13 +30,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  save: [data: { title: string; category: string; assignee: string; notes: string; links: TodoLink[] }]
+  save: [data: { title: string; category: string; assignee: string; notes: string; links: TodoLink[]; status: TodoStatus }]
   delete: [id: string]
 }>()
 
 const title = ref(props.todo.title)
 const category = ref(props.todo.category)
 const assignee = ref(props.todo.assignee)
+const status = ref<TodoStatus>(props.todo.status || (props.todo.completed ? 'done' : 'todo'))
 const notes = ref(props.todo.notes || '')
 const links = ref<TodoLink[]>(props.todo.links ? [...props.todo.links] : [])
 const newLinkLabel = ref('')
@@ -50,6 +54,13 @@ function removeLink(index: number) {
   links.value = links.value.filter((_, i) => i !== index)
 }
 
+const STATUS_OPTIONS: { value: TodoStatus; label: string }[] = [
+  { value: 'todo', label: 'Te doen' },
+  { value: 'in_progress', label: 'Bezig' },
+  { value: 'done', label: 'Klaar' },
+  { value: 'blocked', label: 'Geblokkeerd' },
+]
+
 function handleSave() {
   emit('save', {
     title: title.value.trim(),
@@ -57,6 +68,7 @@ function handleSave() {
     assignee: assignee.value,
     notes: notes.value.trim(),
     links: links.value,
+    status: status.value,
   })
 }
 
@@ -93,6 +105,27 @@ onUnmounted(() => {
           type="text"
           class="mt-1 w-full px-3 py-2 rounded-lg border border-warm-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/30 focus:border-accent-500"
         />
+      </div>
+
+      <div>
+        <label class="text-xs font-medium text-warm-500 uppercase tracking-wide">Status</label>
+        <div class="mt-1 flex gap-2">
+          <button
+            v-for="opt in STATUS_OPTIONS"
+            :key="opt.value"
+            type="button"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all border"
+            :class="status === opt.value
+              ? opt.value === 'done' ? 'bg-green-500 text-white border-green-500'
+                : opt.value === 'in_progress' ? 'bg-blue-500 text-white border-blue-500'
+                : opt.value === 'blocked' ? 'bg-red-400 text-white border-red-400'
+                : 'bg-warm-800 text-white border-warm-800'
+              : 'bg-white text-warm-600 border-warm-200 hover:border-warm-400'"
+            @click="status = opt.value"
+          >
+            {{ opt.label }}
+          </button>
+        </div>
       </div>
 
       <div class="flex gap-3">

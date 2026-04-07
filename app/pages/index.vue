@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { sortedEvents, progress: timelineProgress, fetchEvents, addEvent, toggleEvent, updateEvent, deleteEvent } = useTimeline()
-const { todos, completedCount, totalCount, fetchTodos, addTodo, toggleTodo, updateTodo, deleteTodo, reorderTodos } = useTodos()
+const { todos, completedCount, totalCount, fetchTodos, addTodo, cycleStatus, updateTodo, deleteTodo, reorderTodos } = useTodos()
 const { costs, totalSpent, remaining, fetchCosts } = useCosts()
 
 const categories = ref<{ id: string; label: string; color: string }[]>([])
@@ -25,7 +25,7 @@ function handleUpdateAssignee(id: string, assignee: string) {
   updateTodo(id, { assignee })
 }
 
-function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string; links?: { label: string; url: string }[] }) {
+function handleUpdateTodo(id: string, data: { title: string; category: string; assignee: string; notes: string; status?: string; links?: { label: string; url: string }[] }) {
   updateTodo(id, data)
 }
 </script>
@@ -53,7 +53,7 @@ function handleUpdateTodo(id: string, data: { title: string; category: string; a
       <TodoSection
         :todos="todos"
         :categories="categories"
-        @toggle="toggleTodo"
+        @cycle-status="cycleStatus"
         @delete="deleteTodo"
         @add="addTodo"
         @update-assignee="handleUpdateAssignee"
