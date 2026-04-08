@@ -37,6 +37,13 @@ export interface CostsData {
   items: CostItem[]
 }
 
+export interface ExternalLink {
+  id: string
+  label: string
+  url: string
+  category: string
+}
+
 export const CATEGORIES = [
   { id: 'aannemer', label: 'Aannemer', color: '#F97316' },
   { id: 'vloer', label: 'Vloer', color: '#8B5CF6' },
